@@ -94,6 +94,30 @@
     </div>
 </div>
 
+<div class="nk-content ">
+  <div class="container-fluid">
+      <div class="nk-content-inner">
+          <div class="nk-content-body">
+            <div class="col-lg-12 pb-5">
+                              <div class="card h-100">
+                                  <div class="card-inner">
+                                      <form method="POST"  >
+                                          <ul class="link-list-opt no-bdr">
+                                              <li><a href="/add-cat"><em class="icon ni ni-plus"></em><span>Add Category</span></a></li>
+                                               
+                                          </ul>
+                                        {% csrf_token %}
+                                        {{form|crispy}}
+                                        <input class="mt-2 btn btn-primary" value="SEND" type="submit">
+                                      </form>
+                                  </div>
+                              </div>
+                          </div>
+          </div>
+      </div>
+  </div>
+  </div>
+
 {% for total in view %}
 <script defer>
     document.getElementById('{{forloop.counter}}').onclick = function(){

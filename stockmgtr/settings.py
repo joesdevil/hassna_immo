@@ -11,11 +11,11 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 import os
 from pathlib import Path
-import environ
+# import environ
 
-env = environ.Env()
-# reading .env file
-environ.Env.read_env()
+# env = environ.Env()
+# # reading .env file
+# environ.Env.read_env()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -24,7 +24,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env("SECRET_KEY")
+SECRET_KEY = 'django-insecure-4_9-*#36pk@p&+x@3@cw4j-74o-_h!+3)4&e8^9=$7*$srru5x'
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -35,7 +36,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'django.contrib.admin',
-    'registration',
+    
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -88,12 +89,8 @@ WSGI_APPLICATION = 'stockmgtr.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'project',
-        'USER': 'root',
-        'PASSWORD': '',
-        'HOST': 'localhost',
-        'PORT': '3306'
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 
@@ -152,6 +149,6 @@ MEDIA_URL = '/stock/static/images/'
 
 EMAIL_HOST = 'smtpd'
 EMAIL_PORT = 587
-EMAIL_HOST_USER = 'infectedlab@gmail.com'
-PASSWORD = env("PASSWORD")
+EMAIL_HOST_USER = 'joesdevil10@gmail.com'
+PASSWORD = "33025340Ss"
 EMAIL_USE_TLS = True

@@ -1,5 +1,6 @@
 from django.contrib import admin
 from .form import *
+from .models import *
 
 
 # Register your models here.
@@ -20,3 +21,6 @@ admin.site.register(State)
 admin.site.register(City)
 admin.site.register(Person)
 admin.site.register(Contacts)
+
+admin.site.register(StockHistory)
+admin.site.register(AddTask)

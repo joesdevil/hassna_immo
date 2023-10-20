@@ -286,6 +286,8 @@
       data: [92, 105, 125, 85, 110, 106, 131, 105, 110, 131, 105, 110]
     }]
   };
+
+
   var todayRevenue = {
     labels: ["12AM - 02AM", "02AM - 04AM", "04AM - 06AM", "06AM - 08AM", "08AM - 10AM", "10AM - 12PM", "12PM - 02PM", "02PM - 04PM", "04PM - 06PM", "06PM - 08PM", "08PM - 10PM", "10PM - 12PM"],
     dataUnit: 'Orders',

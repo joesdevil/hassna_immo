@@ -5,10 +5,15 @@ from .models import *
 # fields = '__all__' to display all
 
 
+class CategoryCreateForm(forms.ModelForm):
+    class Meta:
+        model = Category
+        fields = ['group']
+
 class StockCreateForm(forms.ModelForm):
     class Meta:
         model = Stock
-        fields = ['category', 'item_name', 'quantity', 'image', 'date']
+        fields = ['category', 'item_name','Code_Bar', 'quantity','purchasing_price', 'image', 'date']
 
     # def clean_category(self):
     #     category = self.cleaned_data.get('category')
@@ -44,13 +49,26 @@ class StockSearchForm(forms.ModelForm):
 
     class Meta:
         model = Stock
-        fields = ['category', 'item_name']
+        fields = ['category',  ]
+        
+
+class DepSearchForm(forms.Form):
+    
+    user = forms.CharField(required=False)
+    export_to_CSV = forms.BooleanField(required=False)
+         
 
 
 class StockUpdateForm(forms.ModelForm):
     class Meta:
         model = Stock
         fields = ['category', 'item_name', 'quantity', 'image']
+        
+    
+class TaskUpdateForm(forms.ModelForm):
+    class Meta:
+        model = AddTask
+        fields = '__all__'
 
 
 class IssueForm(forms.ModelForm):
@@ -70,11 +88,34 @@ class ReorderLevelForm(forms.ModelForm):
         model = Stock
         fields = ['re_order']
 
+class AddTaskForm(forms.ModelForm):
+    class Meta:
+        model = AddTask
+        fields = ['customer','product','quantity','price_per_item','date' ]
+
+
+class AddCountry(forms.ModelForm):
+    class Meta:
+        model = Country
+        fields =  ['name']
+        
+        
+class AddState(forms.ModelForm):
+    class Meta:
+        model = State
+        fields =  ['name']
+        
+class AddCity(forms.ModelForm):
+    class Meta:
+        model = City
+        fields =  ['name']
+
+
 
 class DependentDropdownForm(forms.ModelForm):
     class Meta:
         model = Person
-        fields = '__all__'
+        fields = ['name','country','state','city','phone','email']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

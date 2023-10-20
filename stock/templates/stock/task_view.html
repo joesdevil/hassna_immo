@@ -1,6 +1,6 @@
 {% load static %}
 {% load crispy_forms_tags %}
-{% load tz %}
+
 
 
 
@@ -29,88 +29,77 @@
                                                     <th class="nk-tb-col"><span>ITEM NAME</span></th>
                                                     <th class="nk-tb-col"><span>CATEGORY</span></th>
                                                     <!-- <th class="nk-tb-col tb-col-md"><span>REORDER LEVEL</span></th> -->
-                                                    <th class="nk-tb-col tb-col-md"><span>Code Bar</span></th>  
+                                                    
                                                     <th class="nk-tb-col tb-col-md"><span>QUANTITY</span></th>
-                                                      <th class="nk-tb-col tb-col-md"><span>TIME STAMP</span></th>
-                                                      <th class="nk-tb-col tb-col-md"><span>LAST UPDATED</span></th>
-                                                    <th class="nk-tb-col nk-tb-col-tools">
+                                                      <th class="nk-tb-col tb-col-md"><span>PRICE/ITEM</span></th>
+                                                      <th class="nk-tb-col tb-col-md"><span>TOTAL AMOUNT</span></th>
+                                                      <th class="nk-tb-col tb-col-md"><span>CUSTOMER</span></th>  
+                                                      <th class="nk-tb-col nk-tb-col-tools">
                                                         <ul class="nk-tb-actions gx-1 my-n1">
                                                             <li class="mr-n1">
                                                                 <div class="dropdown">
-                                                                    <a href="#" class="dropdown-toggle btn btn-icon btn-trigger" data-toggle="dropdown"><em id="drp" class="icon ni ni-more-h"></em></a>
+                                                                    <a href="#" class="dropdown-toggle btn btn-icon btn-trigger" data-toggle="dropdown"><em id="drp"  class="icon ni ni-more-h"></em></a>
                                                                 </div>
                                                                 <div id="drpmen" class="dropdown-menu dropdown-menu-right">
-                                                                    <ul class="link-list-opt no-bdr">
-                                                                        <li><a href="/view_stock?type=nostock"><em   class="icon ni ni-task"></em><span>View Products out of stock </span></a></li>
-                                                                        <li><a href="/view_stock?type=stock"><em class="icon ni ni-task"></em><span>View Products available</span></a></li>
-                                                                        <!-- <li><a href="/co_order/2/"><em class="icon ni ni-check"></em><span>Confirm Order</span></a></li>
-                                                                        <li><a id="1s" href="javascript:void(0)"><em class="icon ni ni-trash"></em><span>Remove Task</span></a></li> -->
-                                                                    </ul>
-                                                                </div>
-                                                            <script>
-                                                                document.getElementById("drp").addEventListener("click",function(){
-                                                                    document.getElementById("drpmen").classList.toggle("drpd")
+                                                                        <ul class="link-list-opt no-bdr">
+                                                                            <li><a href="/task_view?type=confirmed"><em  class="icon ni ni-task"></em><span>View Confirmed Tasks</span></a></li>
+                                                                            <li><a href="/task_view?type=unconfirmed"><em class="icon ni ni-task"></em><span>View Unonfirmed Tasks</span></a></li>
+                                                                            <!-- <li><a href="/co_order/2/"><em class="icon ni ni-check"></em><span>Confirm Order</span></a></li>
+                                                                            <li><a id="1s" href="javascript:void(0)"><em class="icon ni ni-trash"></em><span>Remove Task</span></a></li> -->
+                                                                        </ul>
+                                                                    </div>
+                                                                <script>
+                                                                    document.getElementById("drp").addEventListener("click",function(){
+                                                                        document.getElementById("drpmen").classList.toggle("drpd")
                                                                     if(document.getElementById("drpmen").classList.contains("drpd")){
                                                                         document.getElementById("drpmen").style.display="block"
                                                                     }else{
                                                                         document.getElementById("drpmen").style.display="none"
                                                                     }
-                                                                    
-                                                                })
-                                                            </script>
+                                                                    })
+                                                                </script>
                                                             </li>
                                                         </ul>
                                                     </th>
                                                 </tr><!-- .nk-tb-item -->
                                             </thead>
                                             <tbody>
-
-
-                                                <script src="{% static 'js/sweetalert2.all.min.js' %}"></script>
-
                                                 
-                                                 
- 
-                                                
-                                                 
                                                 <script>
                                                     '{% for every in everything %}'
                                                      
                                                      
-                                                    '{% if every.date.date   < present_date  %}'
+                                                    '{% if every.date.date   == present_date  %}'
                                                     setTimeout(() => {
                                                         Swal.fire({
                                                             position: 'center',
-                                                            icon: 'error',
-                                                            title: '{{every.item_name}} has already expired on {{every.timestamp.date}}',
+                                                            icon: 'success',
+                                                            title: 'you have a deivery today for {{every.customer}}',
                                                             showConfirmButton: true,
-                                                            timer: 15000
+                                                            timer: 35000
                                                             })
                                                     }, '{{forloop.counter}}'*5000);
                                                     
                                                          
                                                     '{% endif %}'
 
-                                                    '{% if every.quantity <= 5  %}'
+                                                    '{% if every.date.date   < present_date  %}'
                                                     setTimeout(() => {
                                                         Swal.fire({
                                                             position: 'center',
                                                             icon: 'error',
-                                                            title: '{{every.item_name}} stock is about to finish, left {{every.quantity}}',
+                                                            title: 'you missed to deliver to {{every.customer}}',
                                                             showConfirmButton: true,
-                                                            timer: 25000
+                                                            timer: 55000
                                                             })
-                                                    }, '{{forloop.counter}}'*15000);
+                                                    }, '{{forloop.counter}}'*8000);
                                                     
                                                          
                                                     '{% endif %}'
+
+                                                     
                                                    
-                                             
-                                                
-                                                    
-                                                    
-                                                         
-                                                    
+                                              
 
 
                                             ' {% endfor %}'
@@ -118,12 +107,7 @@
 
                                             
                                                 </script>
-                                               
                                                {% for every in everything %}
- 
-                                                
-                                               
-                                                
                                                 <tr class="nk-tb-item">
                                                     <td class="nk-tb-col">
                                                         <span class="tb-sub">{{forloop.counter}}</span>
@@ -137,25 +121,26 @@
                                                             <span style="background: red" class="title"><a href="{% url 'stock_detail' every.id %}">{{ every.item_name }}</a></span>
                                                             {% else %}
                                                             <!-- <span class="title"><a href="{% url 'stock_detail' every.id %}">{{ every.item_name }}</a></span> -->
-                                                            <span class="title"><a href="{% url 'stock_detail' every.id %}">{{ every.item_name }}</a></span>
+                                                            <span class="title"><a href="{% url 'stock_detail' every.id %}">{{ every.product.item_name }}</a></span>
                                                             {% endif %}
                                                         </span>
                                                     </td>
 
                                                     <td class="nk-tb-col">
-                                                        <span class="tb-lead"><a href="{% url 'update_stock' every.id %}">{{every.category}}</a></span>
+                                                        <span class="tb-lead"><a href="{% url 'update_stock' every.id %}">{{every.product.category}}</a></span>
                                                     </td>
-                                                    <td class="nk-tb-col">
-                                                        <span class="tb-sub"><a href="{% url 're_order' every.id %}">{{every.Code_Bar}}</a></span>
-                                                    </td>
+                                                   
                                                     <td class="nk-tb-col tb-col-md">
                                                         <span class="tb-sub">{{every.quantity}}</span>
                                                     </td>
                                                     <td class="nk-tb-col tb-col-md">
-                                                        <span class="tb-sub">{{every.last_updated}}</span>
+                                                        <span class="tb-sub">{{every.price_per_item}}</span>
                                                     </td>
                                                     <td class="nk-tb-col tb-col-md">
-                                                        <span class="tb-sub">{{every.timestamp}}</span>
+                                                        <span class="tb-sub">{{every.total_amount}}</span>
+                                                    </td>
+                                                    <td class="nk-tb-col">
+                                                        <span class="tb-sub"><a href="{% url 're_order' every.id %}">{{every.customer}}</a></span>
                                                     </td>
                                                     <td class="nk-tb-col nk-tb-col-tools">
                                                         <ul class="nk-tb-actions gx-1 my-n1">
@@ -164,10 +149,10 @@
                                                                     <a href="#" class="dropdown-toggle btn btn-icon btn-trigger" data-toggle="dropdown"><em class="icon ni ni-more-h"></em></a>
                                                                     <div class="dropdown-menu dropdown-menu-right">
                                                                         <ul class="link-list-opt no-bdr">
-                                                                            <li><a href="{% url 'update_stock' every.id %}"><em class="icon ni ni-edit"></em><span>Edit Product</span></a></li>
+                                                                            <li><a href="{% url 'update_task' every.id %}"><em class="icon ni ni-edit"></em><span>Edit Task</span></a></li>
                                                                             <li><a href="{% url 'stock_detail' every.id %}"><em class="icon ni ni-eye"></em><span>View Product</span></a></li>
-                                                                            <li><a href="{% url 're_order' every.id %}"><em class="icon ni ni-activity-round"></em><span>Reorder Level</span></a></li>
-                                                                            <li><a id="{{forloop.counter}}"  href="javascript:void(0)"><em class="icon ni ni-trash"></em><span>Remove Product</span></a></li>
+                                                                            <li><a href="{% url 'co_order' every.id %}"><em class="icon ni ni-check"></em><span>{% if every.confirmed %}Cancel Order{% else %}Confirm Order{% endif %}</span></a></li>
+                                                                            <li><a id="{{forloop.counter}}s"  href="javascript:void(0)"><em class="icon ni ni-trash" ></em><span>Remove Task</span></a></li>
                                                                         </ul>
                                                                     </div>
                                                                 </div>
@@ -175,7 +160,44 @@
                                                         </ul>
                                                     </td>
                                                 </tr><!-- .nk-tb-item -->
+                                                <script>
+                                                    document.getElementById('{{forloop.counter}}s').onclick = function(){
+                                                    const swalWithBootstrapButtons = Swal.mixin({
+                                                  customClass: {
+                                                    confirmButton: 'btn btn-success',
+                                                    cancelButton: 'btn btn-danger'
+                                                  },
+                                                  buttonsStyling: false
+                                                })
                                                 
+                                                swalWithBootstrapButtons.fire({
+                                                  title: 'Are you sure you want to delete {{every.product}}?',
+                                                  text: "You won't be able to revert this!",
+                                                  icon: 'warning',
+                                                  showCancelButton: true,
+                                                  confirmButtonText: '<a href="{% url 'delete_task' every.id %}">Delete</a>',
+                                                  cancelButtonText: 'Cancel',
+                                                  reverseButtons: true
+                                                }).then((result) => {
+                                                  if (result.isConfirmed) {
+                                                    swalWithBootstrapButtons.fire(
+                                                      'Deleted!',
+                                                      '{{every.item_name}} has been deleted.',
+                                                      'success'
+                                                    )
+                                                  } else if (
+                                                    /* Read more about handling dismissals below */
+                                                    result.dismiss === Swal.DismissReason.cancel
+                                                  ) {
+                                                    swalWithBootstrapButtons.fire(
+                                                      'Cancelled',
+                                                      'Your item is safe :)',
+                                                      'error'
+                                                    )
+                                                  }
+                                                })
+                                                };
+                                                </script>
                                              {% endfor %}
 
 

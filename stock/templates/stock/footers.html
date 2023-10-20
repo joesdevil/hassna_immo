@@ -3,7 +3,7 @@
                 <div class="nk-footer">
                     <div class="container-fluid">
                         <div class="nk-footer-wrap">
-                            <div class="nk-footer-copyright"> &copy; 2021 Stock Inventory by <a href="javascript:void" >Donald Nwokoro</a>
+                            <div class="nk-footer-copyright"> &copy; 2023 Stock Inventory by <a href="/" >Salem sif eddine</a>
                             </div>
                             <div class="nk-footer-links">
                                 <ul class="nav nav-sm">
@@ -157,19 +157,19 @@ $(document).ready(function(){
   // datasets: [{label : string, color: string (color code with # or other format), data: array}]
 
   var barChartData = {
-    labels:  {{ labels|safe }},
-    dataUnit: 'Issued',
+    labels:  {{ label_item_b|safe }},
+    dataUnit: 'Orders',
     datasets: [{
       color: "#b695ff",
-      data: {{ issue_data|safe }}
+      data: {{ data_b|safe }}
     }]
   };
   var barItemData = {
-    labels:  {{ label_item|safe }},
-    dataUnit: 'Issued',
+    labels:  {{ label_item_b|safe }},
+    dataUnit: 'orders',
     datasets: [{
       color: "#b695ff",
-      data: {{ issue_data|safe }}
+      data: {{ data_b|safe }}
     }]
   };
   var barChartMultiple = {
@@ -310,23 +310,18 @@ $(document).ready(function(){
   // legend: false - boolean,
   // dataUnit: string, (Used in tooltip or other section for display)
   // datasets: [{label : string, color: string (color code with # or other format), data: array}]
-
+ 
   var solidLineChart = {
-    labels: {{ label_item|safe }},
-    dataUnit: 'Items',
+    labels: {{ label_price|safe }},
+    dataUnit: 'DA',
     lineTension: .4,
     legend: true,
     datasets: [{
-      label: "Total Items",
+      label: "All",
       color: "#5ce0aa",
       background: 'transparent',
-      data: {{ data|safe }}
-    }, {
-      label: "Recently Issued",
-      color: "#9d72ff",
-      background: 'transparent',
-      data: {{ issue_data|safe }}
-    }]
+      data: {{ data_price|safe }}
+    } ]
   };
    var solidDataChart = {
     labels: {{ label_item|safe }},
@@ -334,16 +329,11 @@ $(document).ready(function(){
     lineTension: .4,
     legend: true,
     datasets: [{
-      label: "Total Items",
+      label: "All",
       color: "#5ce0aa",
       background: 'transparent',
       data: {{ data|safe }}
-    }, {
-      label: "Recently Received",
-      color: "#9d72ff",
-      background: 'transparent',
-      data: {{ receive_data|safe }}
-    }]
+    }, ]
   };
   var filledLineChart = {
     labels: {{ label_item|safe }},
@@ -563,7 +553,7 @@ $(document).ready(function(){
   } // init pie chart
 
  var pieItemData = {
-    labels: {{ labels|safe }},
+    labels: {{ label_item|safe }},
     dataUnit: 'items',
     legend: false,
     datasets: [{
@@ -645,23 +635,23 @@ $(document).ready(function(){
 
   pieChart();
   var doughnutChartData = {
-    labels:  {{ labels|safe }},
-    dataUnit: 'Received',
+    labels:  {{ label_item|safe }},
+    dataUnit: 'Item',
     legend: false,
     datasets: [{
       borderColor: "#fff",
       background: ["#b695ff", "#f4aaa4", "#2c3782", "#20c997"],
-      data: {{ receive_data|safe }}
+      data: {{ data|safe }}
     }]
   };
    var doughnutItemData = {
-    labels:  {{ label_item|safe }},
-    dataUnit: 'Received',
+    labels:  {{ label_item_b|safe }},
+    dataUnit: 'Item',
     legend: false,
     datasets: [{
       borderColor: "#fff",
       background: ["#b695ff", "#f4aaa4", "#2c3782", "#20c997"],
-      data: {{ receive_data|safe }}
+      data: {{ data_b|safe }}
     }]
   };
 
