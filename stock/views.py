@@ -79,10 +79,10 @@ def get_client_ip(request):
    
     
         
-    count = User.objects.all().count()
-    body = Category.objects.values('stock').count()
-    mind = Category.objects.values('stockhistory').count()
-    soul = Category.objects.values('group').count()
+    count = Stock.objects.all().count()
+    body = Project.objects.all().count()
+    mind = AddTask.objects.all().count()
+    soul = Person.objects.all().count()
     context = {
         'count': count,
         'body': body,
@@ -121,7 +121,7 @@ def view_stock(request):
     if request.method == 'POST':
         print("posted post")
         category = form['category'].value()
-        everything = Stock.objects.filter(item_name__icontains=form['item_name'].value())
+        everything = Stock.objects.filter(category_id = form['category'].value())
         if category != '':
             everything = everything.filter(category_id=category)
 
@@ -129,10 +129,10 @@ def view_stock(request):
             instance = everything
             wb = openpyxl.Workbook()
             ws = wb.active
-            ws.append(['CATEGORY', 'ITEM NAME', 'QUANTITY'])
+            ws.append(["ID",'ITEM NAME', 'BLOCK','ETAGE','APARTEMENT','CATEGORY',"PRICE", 'QUANTITY'])
 
             for stock in instance:
-                ws.append([stock.category.group, stock.item_name, stock.quantity])
+                ws.append([stock.id, stock.item_name,stock.block,stock.etage,stock.apartement,stock.category.group,stock.price, stock.quantity])
 
             # Prepare the response for Excel download
             response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
@@ -180,7 +180,7 @@ def scrum_view(request):
 @login_required
 def add_stock(request):
     print("hmmmm")
-    title = 'Add Stock'
+    title = 'Add Reservation'
     add = Stock.objects.all()
     
     if request.method == 'POST':
@@ -334,18 +334,47 @@ def update_stock(request, pk):
     context = {'form': form, 'update': update, 'title': title}
     return render(request, 'stock/add_stock.html', context)
 
+
+@login_required
+def update_project(request, pk):
+    title = 'Update Project'
+    update = Project.objects.get(id=pk)
+    form = ProjectUpdateForm(instance=update)
+    if request.method == 'POST':
+        form = ProjectUpdateForm(request.POST , instance=update)
+        if form.is_valid():
+             
+            form.save()
+            messages.success(request, 'Successfully Updated!')
+            return redirect('/view_project')
+    context = {'form': form, 'update': update, 'title': title}
+    return render(request, 'stock/add_project.html', context)
+
+
+
 @login_required
 def update_task(request, pk):
     title = 'Update Task'
     update = AddTask.objects.get(id=pk)
     form = TaskUpdateForm(instance=update)
     if request.method == 'POST':
-        form = TaskUpdateForm(request.POST, request.FILES, instance=update)
+        form = TaskUpdateForm(request.POST,  instance=update)
         if form.is_valid():
-            image_path = update.image.path
-            if os.path.exists(image_path):
-                os.remove(image_path)
-            form.save()
+            
+            update.user.id=form['user'].value()
+            update.customer.id=form['customer'].value()
+            update.product.id=form['product'].value()
+            update.quantity=form['quantity'].value()
+            update.total_amount=form['total_amount'].value()
+            update.phone_number=form['phone_number'].value()
+            update.deposit_amount=form['deposit_amount'].value()
+            update.payement_type=form['payement_type'].value()
+            update.parts=form['parts'].value()
+            update.date=form['date'].value()
+            update.confirmed=form['confirmed'].value()
+            update.save()
+
+            
             messages.success(request, 'Successfully Updated!')
             return redirect('/task_view')
     context = {'form': form, 'update': update, 'title': title}
@@ -530,7 +559,7 @@ def add_task(request):
             if int(request.POST["quantity"]) <= updatestock.quantity:
                 updatestock.quantity  = updatestock.quantity - int(request.POST["quantity"]) 
                 updatestock.save()
-                total_amount= float(request.POST["quantity"]) * float(request.POST["price_per_item"])
+                total_amount= float(request.POST["quantity"]) * float(request.POST["total_amount"])
                 
                 
                 AddTask.objects.get_or_create(
@@ -538,8 +567,8 @@ def add_task(request):
                     user = request.user,
                     product_id=request.POST["product"],
                     quantity=request.POST["quantity"],
-                    price_per_item=request.POST["price_per_item"],
-                    total_amount=total_amount,
+                    total_amount=request.POST["total_amount"],
+                     
                     date=request.POST["date"]
                 )
                 
@@ -576,7 +605,7 @@ def task_view(request):
     if request.method == 'POST':
         print("posted post")
         category = form['category'].value()
-        everything = Stock.objects.all()
+        everything = AddTask.objects.all()
         if category != '':
             everything = everything.filter(category_id=category)
 
@@ -584,10 +613,11 @@ def task_view(request):
             instance = everything
             wb = openpyxl.Workbook()
             ws = wb.active
-            ws.append(['CATEGORY', 'ITEM NAME', 'QUANTITY','PURCHASED PRICE','DATE','CODE BAR'])
+            ws.append(['CUSTOMER', 'PROJECT','BIEN','BLOCK','ETAGE','APARTEMENT',"PAYEMENT TYPE",   'QUANTITY', 'TOTAL AMOUNT','DEPOSIT AMOUNT','PHONE NUMBER', "DATE"])
 
-            for stock in instance:
-                ws.append([stock.category.group, stock.item_name, stock.quantity,stock.purchasing_price,str(stock.date.date()),stock.Code_Bar])
+            for instance1 in instance:
+                print("length is", len(instance))
+                ws.append([str(instance1.customer), str(instance1.product),str(instance1.product),str(instance1.product.block),str(instance1.product.etage),str(instance1.product.apartement),instance1.payement_type, instance1.quantity,instance1.total_amount,instance1.deposit_amount,instance1.phone_number,str(instance1.date.date()) ])
 
             # Prepare the response for Excel download
             response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
@@ -643,12 +673,12 @@ def dependent_forms_view(request):
                 instance = everything
                 wb = openpyxl.Workbook()
                 ws = wb.active
-                ws.append(['customer', 'ITEM NAME','PRICE PER ITEM','QUANTITY','TOTAL','BENIFITS'
+                ws.append(['customer', 'ITEM NAME','PRICE PER ITEM','TOTAL','BENIFITS'
                            ,'DATE','PLACE TO DELIVER'])
 
                 for task in instance:
-                    ws.append([task.customer.name, task.product.item_name,task.price_per_item, task.quantity,
-                               task.total_amount,(float(task.total_amount)-float(task.product.purchasing_price)),
+                    ws.append([task.customer.name, task.product.item_name,task.price_per_item, 
+                               task.total_amount,(float(task.total_amount)-float(task.deposit_amount)),
                                task.date.date(),f"{task.customer.city} - {task.customer.state}"])
 
                 # Prepare the response for Excel download
@@ -662,7 +692,7 @@ def dependent_forms_view(request):
     return render(request, 'stock/depend_form_view.html', context)
 
 
-@login_required
+ 
 def delete_dependant(request, pk):
     Person.objects.get(id=pk).delete()
     messages.success(request, 'Your file has been deleted.')
@@ -697,3 +727,27 @@ def contact(request):
     context = {'people': people, 'form': form, 'title': title}
     return render(request, 'stock/contacts.html', context)
 
+
+@login_required
+def addProject(request):
+    title = 'Add project'
+    form = AddProject(request.POST or None)
+    if request.method == 'POST':
+            form = AddProject(request.POST )
+            if form.is_valid():
+                form.save()
+                messages.success(request, 'Successfully Added')
+                return redirect('/view_project')
+    
+    context={"form":form}
+    return render(request, 'stock/add_project.html', context)
+
+@login_required
+def view_project(request):
+    title = 'view project'
+    everything = Project.objects.all()
+    
+    context={
+        'everything': everything
+    }
+    return render(request, 'stock/project_view.html', context)

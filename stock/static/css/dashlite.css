@@ -4283,7 +4283,8 @@ svg { height: 100%; max-width: 100%; }
 @media (min-width: 768px) { .wide-sm { max-width: 720px !important; }
   .wide-sm-fix { width: 720px !important; } }
 
-@media (min-width: 992px) { .wide-md { max-width: 960px !important; }
+@media (min-width: 992px) { 
+  /* .wide-md { max-width: 960px !important; } */
   .wide-md-fix { width: 960px !important; } }
 
 @media (min-width: 1200px) { .wide-lg { max-width: 1140px !important; }

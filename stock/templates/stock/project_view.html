@@ -26,19 +26,12 @@
                                                 <tr class="nk-tb-item nk-tb-head">
                                                     <th class="nk-tb-col tb-col-sm"><span>COUNT</span></th>
                                                     <!-- <th class="nk-tb-col"><span>STOCK NAME</span></th> -->
-                                                    <th class="nk-tb-col"><span>ITEM NAME</span></th>
-                                                    <th class="nk-tb-col"><span>CATEGORY</span></th>
+                                                    <th class="nk-tb-col"><span>PROJECT NAME</span></th>
+                                                    <th class="nk-tb-col"><span>START DATE</span></th>
+                                                    <th class="nk-tb-col"><span>END DATE</span></th>
                                                     <!-- <th class="nk-tb-col tb-col-md"><span>REORDER LEVEL</span></th> -->
                                                     
-                                                    <th class="nk-tb-col tb-col-md"><span>QUANTITY</span></th>
-                                                    <th class="nk-tb-col tb-col-md"><span>CUSTOMER</span></th>  
-                                                      <th class="nk-tb-col tb-col-md"><span>PHONE NUMBER</span></th>
-                                                      <th class="nk-tb-col tb-col-md"><span>PAYEMENT TYPE</span></th>
-                                                      <th class="nk-tb-col tb-col-md"><span>TOTAL AMOUNT</span></th>
-                                                      <th class="nk-tb-col tb-col-md"><span>DEPOSIT AMOUNT</span></th>
-                                                      <th class="nk-tb-col tb-col-md"><span>DATE</span></th>
-
-                                                     
+                                                    
                                                       <th class="nk-tb-col nk-tb-col-tools">
                                                         <ul class="nk-tb-actions gx-1 my-n1">
                                                             <li class="mr-n1">
@@ -120,44 +113,25 @@
                                                     <td class="nk-tb-col tb-col-sm">
                                                         <span class="tb-product">
                                                             {% if every.image %}
-                                                            <img src="{{ every.image.url }}" alt="{{ every.item_name }}" class="thumb">
+                                                            <img src="{{ every.image.url }}" alt="{{ every.name }}" class="thumb">
                                                             {% endif %}
                                                             {% if every.quantity <= every.re_order %}
-                                                            <span style="background: red" class="title"><a href="{% url 'stock_detail' every.id %}">{{ every.item_name }}</a></span>
+                                                            <span style="background: red" class="title"><a href="{% url 'stock_detail' every.id %}">{{ every.state }}</a></span>
                                                             {% else %}
                                                             <!-- <span class="title"><a href="{% url 'stock_detail' every.id %}">{{ every.item_name }}</a></span> -->
-                                                            <span class="title"><a href="{% url 'stock_detail' every.id %}">{{ every.product.item_name }}</a></span>
+                                                            <span class="title"><a href="{% url 'stock_detail' every.id %}">{{ every.city }}</a></span>
                                                             {% endif %}
                                                         </span>
                                                     </td>
 
                                                     <td class="nk-tb-col">
-                                                        <span class="tb-lead"><a href="{% url 'update_stock' every.id %}">{{every.product.category}}</a></span>
+                                                        <span class="tb-lead"><a href="{% url 'update_stock' every.id %}">{{every.start_date}}</a></span>
                                                     </td>
                                                    
                                                     <td class="nk-tb-col tb-col-md">
-                                                        <span class="tb-sub">{{every.quantity}}</span>
-                                                    </td>
-                                                    <td class="nk-tb-col">
-                                                        <span class="tb-sub"><a href="{% url 're_order' every.id %}">{{every.customer}}</a></span>
-                                                    </td>
-                                                    <td class="nk-tb-col tb-col-md">
-                                                        <span class="tb-sub">{{every.phone_number}}</span>
-                                                    </td>
-                                                    <td class="nk-tb-col tb-col-md">
-                                                        <span class="tb-sub">{{every.payement_type}}</span>
-                                                    </td>
-                                                    <td class="nk-tb-col tb-col-md">
-                                                        <span class="tb-sub">{{every.total_amount}}</span>
+                                                        <span class="tb-sub">{{every.end_date}}</span>
                                                     </td>
                                                     
-                                                    <td class="nk-tb-col tb-col-md">
-                                                        <span class="tb-sub">{{every.deposit_amount}}</span>
-                                                    </td>
-                                                    <td class="nk-tb-col tb-col-md">
-                                                        <span class="tb-sub">{{every.date}}</span>
-                                                    </td>
-                                                   
                                                     <td class="nk-tb-col nk-tb-col-tools">
                                                         <ul class="nk-tb-actions gx-1 my-n1">
                                                             <li class="mr-n1">
@@ -165,7 +139,7 @@
                                                                     <a href="#" class="dropdown-toggle btn btn-icon btn-trigger" data-toggle="dropdown"><em class="icon ni ni-more-h"></em></a>
                                                                     <div class="dropdown-menu dropdown-menu-right">
                                                                         <ul class="link-list-opt no-bdr">
-                                                                            <li><a href="{% url 'update_task' every.id %}"><em class="icon ni ni-edit"></em><span>Edit Project</span></a></li>
+                                                                            <li><a href="{% url 'update_project' every.id %}"><em class="icon ni ni-edit"></em><span>Edit Project</span></a></li>
                                                                             <li><a href="{% url 'stock_detail' every.id %}"><em class="icon ni ni-eye"></em><span>View Product</span></a></li>
                                                                             <li><a href="{% url 'co_order' every.id %}"><em class="icon ni ni-check"></em><span>{% if every.confirmed %}Cancel Order{% else %}Confirm Order{% endif %}</span></a></li>
                                                                             <li><a id="{{forloop.counter}}s"  href="javascript:void(0)"><em class="icon ni ni-trash" ></em><span>Remove Project</span></a></li>
@@ -232,29 +206,7 @@
 </div>
 
 
-<div class="nk-content ">
-<div class="container-fluid">
-    <div class="nk-content-inner">
-        <div class="nk-content-body">
-          <div class="col-lg-12 pb-5">
-                            <div class="card h-100">
-                                <div class="card-inner">
-                                    <form method="POST"  >
-                                        <ul class="link-list-opt no-bdr">
-                                            <li><a href="/add-cat"><em class="icon ni ni-plus"></em><span>Add Category</span></a></li>
-                                             
-                                        </ul>
-                                      {% csrf_token %}
-                                      {{form|crispy}}
-                                      <input class="mt-2 btn btn-primary" value="SEND" type="submit">
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-        </div>
-    </div>
-</div>
-</div>
+ 
 
 
 {% include 'stock/footers.html' %}

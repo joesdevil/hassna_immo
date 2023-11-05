@@ -15,6 +15,7 @@ class StockCreateAdmin(admin.ModelAdmin):
 
 admin.site.register(Stock, StockCreateAdmin)
 admin.site.register(Category)
+admin.site.register(Project)
 admin.site.register(User)
 admin.site.register(Country)
 admin.site.register(State)

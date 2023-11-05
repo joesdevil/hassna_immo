@@ -10,10 +10,19 @@ class CategoryCreateForm(forms.ModelForm):
         model = Category
         fields = ['group']
 
+
+
+
+
+class AddProject(forms.ModelForm):
+    class Meta:
+        model = Project
+        fields = "__all__"
+
 class StockCreateForm(forms.ModelForm):
     class Meta:
         model = Stock
-        fields = ['category', 'item_name','Code_Bar', 'quantity','purchasing_price', 'image', 'date']
+        fields = ["project",'category', 'item_name','price',"block","etage","apartement",'Code_Bar' ,'quantity',  'image', 'date']
 
     # def clean_category(self):
     #     category = self.cleaned_data.get('category')
@@ -59,10 +68,17 @@ class DepSearchForm(forms.Form):
          
 
 
+class ProjectUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Project
+        fields = ['name','country', 'state', 'city','start_date','end_date' ]
+        
+
+
 class StockUpdateForm(forms.ModelForm):
     class Meta:
         model = Stock
-        fields = ['category', 'item_name', 'quantity', 'image']
+        fields = ['project','category', 'item_name', 'price','block','etage','apartement','quantity', 'image','date']
         
     
 class TaskUpdateForm(forms.ModelForm):
@@ -91,7 +107,7 @@ class ReorderLevelForm(forms.ModelForm):
 class AddTaskForm(forms.ModelForm):
     class Meta:
         model = AddTask
-        fields = ['customer','product','quantity','price_per_item','date' ]
+        fields = ['customer','product',"phone_number","total_amount","payement_type","parts","deposit_amount",'quantity', 'date' ]
 
 
 class AddCountry(forms.ModelForm):
