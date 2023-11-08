@@ -96,7 +96,7 @@
                     <div class="card-inner">
                         <form method="POST"  >
                           {% csrf_token %}
-                          {{form|crispy}}
+                          {{form}}
                           <input class="mt-2 btn btn-primary" value="SEND" type="submit">
                         </form>
                     </div>

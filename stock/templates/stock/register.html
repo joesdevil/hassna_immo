@@ -43,7 +43,7 @@
                                     <div class="nk-block-head-content">
                                         <form method="POST" action="">
                                             {% csrf_token %}
-                                            {{ form| crispy }}
+                                            {{ form}}
                                             <input class="mt-2 btn btn-primary" type="submit" name="Login">
                                         </form>
 

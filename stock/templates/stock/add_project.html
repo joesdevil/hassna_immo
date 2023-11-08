@@ -26,12 +26,12 @@
                                     </div>
                                     <form method="POST"   enctype="multipart/form-data"    >
                                         <ul class="link-list-opt no-bdr">
-                                            <li><a href="/add_stock"><em class="icon ni ni-plus"></em><span>Add bien</span></a></li>
+                                            <li><a href="/add_stock"><em class="icon ni ni-plus"></em><span>Add Bien</span></a></li>
                                              
                                         </ul>
                                       {% csrf_token %}
-                                      {{form|crispy}}
-                                      <input class="mt-2 btn btn-primary" type="submit" value="Add Stock">
+                                      {{form}}
+                                      <input class="mt-2 btn btn-primary" type="submit" value="Add Project">
                                     </form>
                                 </div>
                             </div>

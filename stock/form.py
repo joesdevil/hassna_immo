@@ -17,12 +17,12 @@ class CategoryCreateForm(forms.ModelForm):
 class AddProject(forms.ModelForm):
     class Meta:
         model = Project
-        fields = "__all__"
+        fields = ["name","type","nbrtotalLots","Localisation", "nbILOT", "Description" ]
 
 class StockCreateForm(forms.ModelForm):
     class Meta:
         model = Stock
-        fields = ["project",'category', 'item_name','price',"block","etage","apartement",'Code_Bar' ,'quantity',  'image', 'date']
+        fields = ['nomProject','numLOT','numBien','bloc','etage','cote','vue','type','superficieHabitable','superficieUtil','prixM2HorsTaxe','prixM2TTC',' prixVenteM2','montantHorsTaxe','montantTTC','montantVente','etat','dateReservation','Observatioin']
 
     # def clean_category(self):
     #     category = self.cleaned_data.get('category')

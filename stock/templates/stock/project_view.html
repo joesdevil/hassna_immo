@@ -26,9 +26,15 @@
                                                 <tr class="nk-tb-item nk-tb-head">
                                                     <th class="nk-tb-col tb-col-sm"><span>COUNT</span></th>
                                                     <!-- <th class="nk-tb-col"><span>STOCK NAME</span></th> -->
+                                                    <th class="nk-tb-col"><span>ID PROJECT </span></th>
                                                     <th class="nk-tb-col"><span>PROJECT NAME</span></th>
-                                                    <th class="nk-tb-col"><span>START DATE</span></th>
-                                                    <th class="nk-tb-col"><span>END DATE</span></th>
+                                                    <th class="nk-tb-col"><span>TYPE</span></th>
+                                                    <th class="nk-tb-col"><span>LOCALISATION</span></th>
+                                                    <th class="nk-tb-col"><span>NBR LOTS TOTAL</span></th>
+                                                    <th class="nk-tb-col"><span>NBILOT</span></th>
+                                                    <th class="nk-tb-col"><span>DISCRIPTION</span></th>
+
+
                                                     <!-- <th class="nk-tb-col tb-col-md"><span>REORDER LEVEL</span></th> -->
                                                     
                                                     
@@ -67,33 +73,33 @@
                                                     '{% for every in everything %}'
                                                      
                                                      
-                                                    '{% if every.date.date   == present_date  %}'
-                                                    setTimeout(() => {
-                                                        Swal.fire({
-                                                            position: 'center',
-                                                            icon: 'success',
-                                                            title: 'you have a deivery today for {{every.customer}}',
-                                                            showConfirmButton: true,
-                                                            timer: 35000
-                                                            })
-                                                    }, '{{forloop.counter}}'*5000);
+                                                    // '{% if every.date.date   == present_date  %}'
+                                                    // setTimeout(() => {
+                                                    //     Swal.fire({
+                                                    //         position: 'center',
+                                                    //         icon: 'success',
+                                                    //         title: 'you have a deivery today for {{every.name}}',
+                                                    //         showConfirmButton: true,
+                                                    //         timer: 35000
+                                                    //         })
+                                                    // }, '{{forloop.counter}}'*5000);
                                                     
                                                          
-                                                    '{% endif %}'
+                                                    // '{% endif %}'
 
-                                                    '{% if every.date.date   < present_date  %}'
-                                                    setTimeout(() => {
-                                                        Swal.fire({
-                                                            position: 'center',
-                                                            icon: 'error',
-                                                            title: 'you missed to deliver to {{every.customer}}',
-                                                            showConfirmButton: true,
-                                                            timer: 55000
-                                                            })
-                                                    }, '{{forloop.counter}}'*8000);
+                                                    // '{% if every.date.date   < present_date  %}'
+                                                    // setTimeout(() => {
+                                                    //     Swal.fire({
+                                                    //         position: 'center',
+                                                    //         icon: 'error',
+                                                    //         title: 'you missed to deliver to {{every.name}}',
+                                                    //         showConfirmButton: true,
+                                                    //         timer: 55000
+                                                    //         })
+                                                    // }, '{{forloop.counter}}'*8000);
                                                     
                                                          
-                                                    '{% endif %}'
+                                                    // '{% endif %}'
 
                                                      
                                                    
@@ -112,24 +118,32 @@
                                                     </td>
                                                     <td class="nk-tb-col tb-col-sm">
                                                         <span class="tb-product">
-                                                            {% if every.image %}
-                                                            <img src="{{ every.image.url }}" alt="{{ every.name }}" class="thumb">
-                                                            {% endif %}
-                                                            {% if every.quantity <= every.re_order %}
-                                                            <span style="background: red" class="title"><a href="{% url 'stock_detail' every.id %}">{{ every.state }}</a></span>
-                                                            {% else %}
                                                             <!-- <span class="title"><a href="{% url 'stock_detail' every.id %}">{{ every.item_name }}</a></span> -->
-                                                            <span class="title"><a href="{% url 'stock_detail' every.id %}">{{ every.city }}</a></span>
+                                                            <span class="title"><a href="{% url 'stock_detail' every.id %}">{{ every.name }}</a></span>
                                                             {% endif %}
                                                         </span>
                                                     </td>
 
-                                                    <td class="nk-tb-col">
-                                                        <span class="tb-lead"><a href="{% url 'update_stock' every.id %}">{{every.start_date}}</a></span>
-                                                    </td>
-                                                   
                                                     <td class="nk-tb-col tb-col-md">
-                                                        <span class="tb-sub">{{every.end_date}}</span>
+                                                        <span class="tb-sub">{{every.id}}</span>
+                                                    </td>
+                                                    <td class="nk-tb-col tb-col-md">
+                                                        <span class="tb-sub">{{every.name}}</span>
+                                                    </td>
+                                                    <td class="nk-tb-col tb-col-md">
+                                                        <span class="tb-sub">{{every.type}}</span>
+                                                    </td>
+                                                    <td class="nk-tb-col tb-col-md">
+                                                        <span class="tb-sub">{{every.Localisation}}</span>
+                                                    </td>
+                                                    <td class="nk-tb-col tb-col-md">
+                                                        <span class="tb-sub">{{every.nbrLotsTotal}}</span>
+                                                    </td>
+                                                    <td class="nk-tb-col tb-col-md">
+                                                        <span class="tb-sub">{{every.nbILOT}}</span>
+                                                    </td>
+                                                    <td class="nk-tb-col tb-col-md">
+                                                        <span class="tb-sub">{{every.description}}</span>
                                                     </td>
                                                     
                                                     <td class="nk-tb-col nk-tb-col-tools">
@@ -141,7 +155,6 @@
                                                                         <ul class="link-list-opt no-bdr">
                                                                             <li><a href="{% url 'update_project' every.id %}"><em class="icon ni ni-edit"></em><span>Edit Project</span></a></li>
                                                                             <li><a href="{% url 'stock_detail' every.id %}"><em class="icon ni ni-eye"></em><span>View Product</span></a></li>
-                                                                            <li><a href="{% url 'co_order' every.id %}"><em class="icon ni ni-check"></em><span>{% if every.confirmed %}Cancel Order{% else %}Confirm Order{% endif %}</span></a></li>
                                                                             <li><a id="{{forloop.counter}}s"  href="javascript:void(0)"><em class="icon ni ni-trash" ></em><span>Remove Project</span></a></li>
                                                                         </ul>
                                                                     </div>
@@ -161,7 +174,7 @@
                                                 })
                                                 
                                                 swalWithBootstrapButtons.fire({
-                                                  title: 'Are you sure you want to delete {{every.product}}?',
+                                                  title: 'Are you sure you want to delete {{every.name}}?',
                                                   text: "You won't be able to revert this!",
                                                   icon: 'warning',
                                                   showCancelButton: true,
@@ -172,7 +185,7 @@
                                                   if (result.isConfirmed) {
                                                     swalWithBootstrapButtons.fire(
                                                       'Deleted!',
-                                                      '{{every.item_name}} has been deleted.',
+                                                      '{{every.name}} has been deleted.',
                                                       'success'
                                                     )
                                                   } else if (

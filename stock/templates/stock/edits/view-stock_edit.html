@@ -136,7 +136,7 @@ count = User.objects.all().count()
     <h1>{{title}}</h1>
     <form method="POST" action="">
      {% csrf_token %}
-{{form | crispy}}
+{{form}}
     <input class="mt-2 btn btn-primary" type="submit">
 </form>
 <!--<form method="GET" action="">-->

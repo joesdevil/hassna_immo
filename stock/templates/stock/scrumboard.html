@@ -146,7 +146,7 @@ body::-webkit-scrollbar-thumb {
                 <div class="modal-body">
                     <form method="POST" action="" class="form-validate is-alter">
                         {% csrf_token %}
-                      {{task_form|crispy}}
+                      {{task_form}}
                     <div class="form-group">
                         <button type="submit" class="btn btn-primary">Add Project</button>
                     </div>

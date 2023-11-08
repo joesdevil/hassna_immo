@@ -9,6 +9,24 @@ payment_method = (
     ('Cheque', 'Cheque')
 )
 
+Projet_type = (
+    ('Promotionnel', 'Promotionnel'),
+    ('LOT Terrin', 'LOT Terrin'),
+)
+
+Bien_type = (
+    ('Appartement F3', 'Appartement F3'),
+    ('Appartement F4', 'Appartement F4'),
+    ('Appartement F5', 'Appartement F5'),
+    ('Service', 'Service'),
+    ('Local','Local')
+)
+
+Etat_Bien_Type = (
+    ('Libre','Libre'),
+    (' Réservé', 'Réservé'),
+    (' Vendu','Vendu')
+)
 
 class Category(models.Model):
     group = models.CharField(max_length=50, blank=True, null=True)
@@ -40,55 +58,55 @@ class City(models.Model):
         return self.name
 
 
-class Person(models.Model):
-    name = models.CharField(max_length=150)
-    country = models.ForeignKey(Country, on_delete=models.SET_NULL, blank=True, null=True)
-    state = models.ForeignKey(State, on_delete=models.SET_NULL, blank=True, null=True)
-    city = models.ForeignKey(City, on_delete=models.SET_NULL, blank=True, null=True)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    phone= models.CharField(max_length=20, blank=True, null=True)
+class Person(models.Model):             #acquereur
+    nom = models.CharField(max_length=20)
+    dateNaissance = models.DateTimeField(auto_now_add=False, auto_now=False, null=True)
+    lieuNaissance = models.CharField(max_length=150, blank=True, null=True,default="")
+    phone= models.IntegerField() 
     email= models.CharField(max_length=20, blank=True, null=True,default="")
+    idIdentite = models.IntegerField() 
+    nomDossier = models.CharField(max_length=20, blank=True, null=True,default="")
+    dateDossier = models.DateTimeField(auto_now_add=False, auto_now=False, null=True)
+    idBienDemande =  models.IntegerField()           #affiche les biens dispo pour choisir
     def __str__(self):
         return str(self.name)
 
 
 
 class Project(models.Model):
-    
-    name = models.CharField(max_length=150)
-    country = models.ForeignKey(Country, on_delete=models.SET_NULL, blank=True, null=True)
-    state = models.ForeignKey(State, on_delete=models.SET_NULL, blank=True, null=True)
-    city = models.ForeignKey(City, on_delete=models.SET_NULL, blank=True, null=True)
-    start_date=models.DateTimeField(auto_now_add=False, auto_now=False)
-    end_date=models.DateTimeField(auto_now_add=False, auto_now=False)
+    nom = models.CharField(max_length=150)
+    type = models.CharField(choices=Projet_type, max_length=100)
+    Localisation = models.CharField(max_length=150)
+    nbrLotsTotal = models.IntegerField()    #nbr des logements(appartements et locaux et services) total dans le projet
+    nbILOT = models.IntegerField()      #nbr des patiments total dans le projet
+    Observation = models.TextField()
 
 
     def __str__(self):
         return str(self.name)
     
 
-class Stock(models.Model):
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, blank=True)
-    project = models.ForeignKey(Project, on_delete=models.CASCADE)
-    item_name = models.CharField(max_length=50, blank=True, null=True)
-    block=models.CharField(max_length=50, blank=True, null=True)
+class Stock(models.Model):        #biens
+    nomProject = models.CharField(max_length=50, blank=True, null=True)  
+    numLOT= models.CharField(max_length=50, blank=True, null=True)   #num batiment
+    numBien=models.CharField(max_length=50, blank=True, null=True)    #num Porte
+    bloc=models.CharField(max_length=50, blank=True, null=True)
     etage=models.CharField(max_length=50, blank=True, null=True)
-    apartement=models.CharField(max_length=50, blank=True, null=True)
-    Code_Bar = models.CharField(max_length=150, blank=True, null=True)
-    quantity = models.IntegerField(default='0', blank=True, null=True)
-    receive_quantity = models.IntegerField(default='0', blank=True, null=True)
-    received_by = models.CharField(max_length=50, blank=True, null=True)
-    issue_quantity = models.IntegerField(default='0', blank=True, null=True)
-    issued_by = models.CharField(max_length=50, blank=True, null=True)
-    issued_to = models.CharField(max_length=50, blank=True, null=True)
-    price = models.FloatField(max_length=10000)
-    created_by = models.CharField(max_length=50, blank=True, null=True)
-    re_order = models.IntegerField(default='0', blank=True, null=True)
-    last_updated = models.DateTimeField(auto_now_add=False, auto_now=True)
-    timestamp = models.DateTimeField(auto_now_add=True, auto_now=False)
-    date = models.DateTimeField(auto_now_add=False, auto_now=False)
+    cote = models.CharField(max_length=50, blank=True, null=True)
+    vue = models.CharField(max_length=50, blank=True, null=True)
+    typeBien = models.CharField(choices=Bien_type, max_length=100)
+    superficieHabitable = models.IntegerField(default='0', blank=True, null=True)
+    superficieUtil= models.IntegerField(max_length=50, blank=True, null=True)
+    prixM2HorsTaxe = models.IntegerField(default='0', blank=True, null=True)
+    prixM2TTC = models.IntegerField(max_length=50, blank=True, null=True)
+    prixVenteM2 = models.IntegerField(max_length=50, blank=True, null=True)
+    montantHorsTaxe = models.IntegerField(max_length=50, blank=True, null=True)        #montantHorsTaxe =  prixM2HorsTaxe * superficieHabitable
+    montantTTC = models.IntegerField(max_length=10000)                 #montantTTC =  prixM2TTC * superficieHabitable
+    montantVenteTotal = models.IntegerField(max_length=50, blank=True, null=True)          #montantVenteTotal =  montantVenteM2 * superficieHabitable
+    etat = models.CharField(choices=Etat_Bien_Type, max_length=100)        #libre reservé vendu
+    dateReservation= models.DateTimeField(auto_now_add=False, auto_now=True)
+    Observatioin = models.TextField()
     export_to_csv = models.BooleanField(default=False)
-    image = models.ImageField(upload_to='stock/static/images', null=True, blank=True)
 
     def __str__(self):
         return self.item_name
