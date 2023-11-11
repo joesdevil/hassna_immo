@@ -26,16 +26,16 @@
                                                 <tr class="nk-tb-item nk-tb-head">
                                                     <th class="nk-tb-col tb-col-sm"><span>COUNT</span></th>
                                                     <!-- <th class="nk-tb-col"><span>STOCK NAME</span></th> -->
-                                                    <th class="nk-tb-col"><span>ITEM NAME</span></th>
-                                                    <th class="nk-tb-col"><span>CATEGORY</span></th>
+                                                    <th class="nk-tb-col"><span>CUSTOMER</span></th>
+                                                    <th class="nk-tb-col"><span>BIEN</span></th>
                                                     <!-- <th class="nk-tb-col tb-col-md"><span>REORDER LEVEL</span></th> -->
                                                     
-                                                    <th class="nk-tb-col tb-col-md"><span>QUANTITY</span></th>
-                                                    <th class="nk-tb-col tb-col-md"><span>CUSTOMER</span></th>  
-                                                      <th class="nk-tb-col tb-col-md"><span>PHONE NUMBER</span></th>
+                                                  
+                                                    
+                                                      <th class="nk-tb-col tb-col-md"><span>Total amount</span></th>
+                                                      <th class="nk-tb-col tb-col-md"><span>Deposit amount</span></th>
                                                       <th class="nk-tb-col tb-col-md"><span>PAYEMENT TYPE</span></th>
-                                                      <th class="nk-tb-col tb-col-md"><span>TOTAL AMOUNT</span></th>
-                                                      <th class="nk-tb-col tb-col-md"><span>DEPOSIT AMOUNT</span></th>
+                                                      <th class="nk-tb-col tb-col-md"><span>PARTS</span></th>
                                                       <th class="nk-tb-col tb-col-md"><span>DATE</span></th>
 
                                                      
@@ -118,44 +118,40 @@
                                                         <span class="tb-sub">{{forloop.counter}}</span>
                                                     </td>
                                                     <td class="nk-tb-col tb-col-sm">
-                                                        <span class="tb-product">
+                                                        <!-- <span class="tb-product">
                                                             {% if every.image %}
                                                             <img src="{{ every.image.url }}" alt="{{ every.item_name }}" class="thumb">
                                                             {% endif %}
                                                             {% if every.quantity <= every.re_order %}
                                                             <span style="background: red" class="title"><a href="{% url 'stock_detail' every.id %}">{{ every.item_name }}</a></span>
-                                                            {% else %}
+                                                            {% else %} -->
                                                             <!-- <span class="title"><a href="{% url 'stock_detail' every.id %}">{{ every.item_name }}</a></span> -->
-                                                            <span class="title"><a href="{% url 'stock_detail' every.id %}">{{ every.product.item_name }}</a></span>
-                                                            {% endif %}
+                                                            <span class="title"><a href="{% url 'stock_detail' every.id %}">{{ every.customer }}</a></span>
+                                                            <!-- {% endif %} -->
                                                         </span>
                                                     </td>
 
                                                     <td class="nk-tb-col">
-                                                        <span class="tb-lead"><a href="{% url 'update_stock' every.id %}">{{every.product.category}}</a></span>
+                                                        <span class="tb-lead"><a href="{% url 'update_stock' every.id %}">{{every.product.nomProject}}</a></span>
                                                     </td>
                                                    
-                                                    <td class="nk-tb-col tb-col-md">
-                                                        <span class="tb-sub">{{every.quantity}}</span>
-                                                    </td>
-                                                    <td class="nk-tb-col">
-                                                        <span class="tb-sub"><a href="{% url 're_order' every.id %}">{{every.customer}}</a></span>
-                                                    </td>
-                                                    <td class="nk-tb-col tb-col-md">
-                                                        <span class="tb-sub">{{every.phone_number}}</span>
-                                                    </td>
-                                                    <td class="nk-tb-col tb-col-md">
-                                                        <span class="tb-sub">{{every.payement_type}}</span>
-                                                    </td>
+                                                    
+                                                   
                                                     <td class="nk-tb-col tb-col-md">
                                                         <span class="tb-sub">{{every.total_amount}}</span>
                                                     </td>
-                                                    
                                                     <td class="nk-tb-col tb-col-md">
                                                         <span class="tb-sub">{{every.deposit_amount}}</span>
                                                     </td>
                                                     <td class="nk-tb-col tb-col-md">
-                                                        <span class="tb-sub">{{every.date}}</span>
+                                                        <span class="tb-sub">{{every.payement_type}}</span>
+                                                    </td>
+                                                    
+                                                    <td class="nk-tb-col tb-col-md">
+                                                        <span class="tb-sub">{{every.parts}}</span>
+                                                    </td>
+                                                    <td class="nk-tb-col tb-col-md">
+                                                        <span class="tb-sub">{{every.dateReservation}}</span>
                                                     </td>
                                                    
                                                     <td class="nk-tb-col nk-tb-col-tools">
@@ -240,13 +236,13 @@
                             <div class="card h-100">
                                 <div class="card-inner">
                                     <form method="POST"  >
-                                        <ul class="link-list-opt no-bdr">
+                                        <!-- <ul class="link-list-opt no-bdr">
                                             <li><a href="/add-cat"><em class="icon ni ni-plus"></em><span>Add Category</span></a></li>
                                              
-                                        </ul>
+                                        </ul> -->
                                       {% csrf_token %}
-                                      {{form}}
-                                      <input class="mt-2 btn btn-primary" value="SEND" type="submit">
+                                      {{form|crispy}}
+                                      <input class="mt-2 btn btn-primary" value="Exporter fichier excel" type="submit">
                                     </form>
                                 </div>
                             </div>

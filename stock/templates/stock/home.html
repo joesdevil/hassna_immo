@@ -118,7 +118,7 @@
                                                     <div class="card-inner">
                                                         <div class="card-title-group mb-3">
                                                             <div class="card-title">
-                                                                <h6 class="title">Daily Profits Statistics Based on Date</h6>
+                                                                <h6 class="title">Daily Deposit amount Statistics Based on Today By clients</h6>
                                                             </div>
                                                         </div>
                                                         <div class="nk-ecwg8-ck">
@@ -139,7 +139,7 @@
                                                     <div class="card-inner">
                                                         <div class="card-title-group mb-3">
                                                             <div class="card-title">
-                                                                <h6 class="title">Stock Statistics based on Item name</h6>
+                                                                <h6 class="title">Statistique basé sur les biens/m2</h6>
                                                             </div>
                                                         </div>
                                                         <div class="nk-ecwg8-ck">
@@ -159,7 +159,7 @@
                                                     <div class="card-inner">
                                                         <div class="card-title-group mb-3">
                                                             <div class="card-title">
-                                                                <h6 class="title">Stock Statistics based on Products</h6>
+                                                                <h6 class="title">Statistique des Projets  </h6>
                                                             </div>
                                                         </div>
                                                         <div class="nk-ecwg8-ck">
@@ -174,11 +174,32 @@
                                             </div><!-- .card -->
                                         </div> 
 
+                                        <div class="col-xxl-6">
+                                            <div class="card card-full">
+                                                <div class="nk-ecwg nk-ecwg8 h-100">
+                                                    <div class="card-inner">
+                                                        <div class="card-title-group mb-3">
+                                                            <div class="card-title">
+                                                                <h6 class="title">Statistique pour remaining parts per clients  </h6>
+                                                            </div>
+                                                        </div>
+                                                        <div class="nk-ecwg8-ck">
+                                                          <canvas class="pie-chart chartjs-render-monitor" id="pieItemData1" width="327" height="225" style="display: block; height: 180px; width: 262px;"></canvas>
+                                                        </div>
+                                                        <div class="chart-label-group pl-5">
+                                                            <div class="chart-label"></div>
+                                                            <div class="chart-label">{% now "jS F Y H:i" %}</div>
+                                                        </div>
+                                                    </div><!-- .card-inner -->
+                                                </div>
+                                            </div><!-- .card -->
+                                        </div> 
+
 
                         <div style="width: 100%;" class="nk-block nk-block-lg">
                                         <div class="nk-block-head">
                                             <div class="nk-block-head-content">
-                                                <h4 class="nk-block-title">Orders History Analytics per Day</h4>
+                                                <h4 class="nk-block-title"> History Analytics</h4>
                                             </div>
                                         </div>
                                         <div class="row g-gs">
@@ -189,7 +210,7 @@
                                                             <h6 class="title">Recently Issued</h6>
                                                         </div>
                                                         <div class="nk-ck-sm">
-                                                            <canvas class="bar-chart chartjs-render-monitor" id="barChartData"></canvas>
+                                                            <!-- <canvas class="bar-chart chartjs-render-monitor" id="barChartData"></canvas> -->
                                                         </div>
                                                     </div>
                                                 </div><!-- .card-preview -->
@@ -198,10 +219,10 @@
                                                 <div class="card card-preview">
                                                     <div class="card-inner">
                                                         <div class="card-head text-center">
-                                                            <h6 class="title">My Stock Structure</h6>
+                                                            <h6 class="title">Mes Biens Etat</h6>
                                                         </div>
                                                         <div class="nk-ck-sm">
-                                                            <canvas class="doughnut-chart" id="doughnutChartData"></canvas>
+                                                            <canvas class="doughnut-chart" id="doughnutChartData1"></canvas>
                                                         </div>
                                                     </div>
                                                 </div><!-- .card-preview -->
@@ -210,13 +231,13 @@
                                     </div>
 
                          <div style="width: 100%;" class="nk-block nk-block-lg">
-                                        <div class="nk-block-head">
+                                        <!-- <div class="nk-block-head">
                                             <div class="nk-block-head-content">
                                                 <h4 class="nk-block-title">Order History lined Analytics</h4>
                                             </div>
-                                        </div>
+                                        </div> -->
                                         <div class="row g-gs">
-                                            <div class="col-md-6">
+                                            <!-- <div class="col-md-6">
                                                 <div class="card card-preview">
                                                     <div class="card-inner">
                                                         <div class="card-head text-center">
@@ -226,20 +247,20 @@
                                                             <canvas class="line-chart chartjs-render-monitor" id="barItemData"></canvas>
                                                         </div>
                                                     </div>
-                                                </div><!-- .card-preview -->
-                                            </div>
-                                            <div class="col-md-6">
+                                                </div> 
+                                            </div> -->
+                                            <!-- <div class="col-md-6">
                                                 <div class="card card-preview">
                                                     <div class="card-inner">
                                                         <div class="card-head text-center">
                                                             <h6 class="title"> </h6>
                                                         </div>
                                                         <div class="nk-ck-sm">
-                                                            <!-- <canvas class="doughnut-chart" id="doughnutItemData"></canvas> -->
+                                                            <canvas class="doughnut-chart" id="doughnutItemData"></canvas>  
                                                         </div>
                                                     </div>
-                                                </div><!-- .card-preview -->
-                                            </div>
+                                                </div> 
+                                            </div> -->
                                         </div>
                                     </div>
 
@@ -249,6 +270,59 @@
         </div>
     </div>
 </div>
+
+
+ 
+<script>  
+    '{% for every in reservation %}'
+    // setTimeout(() => {
+    //     Swal.fire({
+    //         position: 'center',
+    //         icon: 'success',
+    //         title: 'you have a deivery today for jj',
+    //         showConfirmButton: true,
+    //         timer: 35000
+    //         })
+    // }, '{{forloop.counter}}'*5000);
+     
+    '{% if every.NextdatePayement.date <  present_date  %}'
+    setTimeout(() => {
+        Swal.fire({
+            position: 'center',
+            icon: 'error',
+            title: '{{every.customer}} forgot to pay his {{every.remaining_parts}} parts',
+            showConfirmButton: true,
+            timer: 35000
+            })
+    }, '{{forloop.counter}}'*5000);
+    
+         
+    '{% endif %}'
+
+    '{% if every.NextdatePayement.date ==  present_date   %}'
+    setTimeout(() => {
+        Swal.fire({
+            position: 'center',
+            icon: 'error',
+            title: '{{every.customer}} have to pay his {{every.remaining_parts}} parts today',
+            showConfirmButton: true,
+            timer: 55000
+            })
+    }, '{{forloop.counter}}'*8000);
+    
+         
+    '{% endif %}'
+
+     
+   
+
+
+
+' {% endfor %}'
+
+
+
+ </script> 
 
 {% include 'stock/footers.html' %}
 

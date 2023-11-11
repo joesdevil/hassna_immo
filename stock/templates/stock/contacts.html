@@ -50,7 +50,7 @@
                 <div class="modal-body">
                     <form method="POST" action="" class="form-validate is-alter">
                         {% csrf_token %}
-                      {{form}}
+                      {{form|crispy}}
                     <div class="form-group">
                         <button type="submit" class="btn btn-primary">Add Project</button>
                     </div>

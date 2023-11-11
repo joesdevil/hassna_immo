@@ -21,10 +21,12 @@
                                                 <tr class="nk-tb-item nk-tb-head">
                                                     <th class="nk-tb-col tb-col-sm"><span>COUNT</span></th>
                                                     <th class="nk-tb-col"><span>ID</span></th>
-                                                    <th class="nk-tb-col"><span>NAME</span></th>
-                                                    <th class="nk-tb-col tb-col-md"><span>COUNTRY</span></th>
-                                                      <th class="nk-tb-col tb-col-md"><span>STATE</span></th>
-                                                      <th class="nk-tb-col tb-col-md"><span>CITY</span></th>
+                                                    <th class="nk-tb-col"><span>NOM</span></th>
+                                                    <th class="nk-tb-col tb-col-md"><span>date Naissance</span></th>
+                                                      <th class="nk-tb-col tb-col-md"><span>lieu Naissance</span></th>
+                                                      <th class="nk-tb-col tb-col-md"><span>phone</span></th>
+                                                      <th class="nk-tb-col tb-col-md"><span>Email</span></th>
+                                                      <th class="nk-tb-col tb-col-md"><span>dateDossier</span></th>
                                                       <th class="nk-tb-col nk-tb-col-tools">
                                                         <ul class="nk-tb-actions gx-1 my-n1">
                                                             <li class="mr-n1">
@@ -50,17 +52,25 @@
                                                         <span class="tb-lead">{{total.id}}</span>
                                                     </td>
                                                     <td class="nk-tb-col">
-                                                        <span class="tb-lead">{{total.name}}</span>
+                                                        <span class="tb-lead">{{total.nom}}</span>
                                                     </td>
                                                     <td class="nk-tb-col">
-                                                        <span class="tb-sub">{{total.country}}</span>
+                                                        <span class="tb-sub">{{total.dateNaissance}}</span>
                                                     </td>
                                                     <td class="nk-tb-col tb-col-md">
-                                                        <span class="tb-sub">{{total.state}}</span>
+                                                        <span class="tb-sub">{{total.lieuNaissance}}</span>
                                                     </td>
                                                     <td class="nk-tb-col tb-col-md">
-                                                        <span class="tb-sub">{{total.city}}</span>
+                                                        <span class="tb-sub">{{total.phone}}</span>
                                                     </td>
+
+                                                    <td class="nk-tb-col tb-col-md">
+                                                      <span class="tb-sub">{{total.email}}</span>
+                                                  </td>
+
+                                                  <td class="nk-tb-col tb-col-md">
+                                                    <span class="tb-sub">{{total.dateDossier}}</span>
+                                                </td>
                                                      <td class="nk-tb-col nk-tb-col-tools">
                                                         <ul class="nk-tb-actions gx-1 my-n1">
                                                             <li class="mr-n1">
@@ -102,13 +112,13 @@
                               <div class="card h-100">
                                   <div class="card-inner">
                                       <form method="POST"  >
-                                          <ul class="link-list-opt no-bdr">
+                                          <!-- <ul class="link-list-opt no-bdr">
                                               <li><a href="/add-cat"><em class="icon ni ni-plus"></em><span>Add Category</span></a></li>
                                                
-                                          </ul>
+                                          </ul> -->
                                         {% csrf_token %}
-                                        {{form}}
-                                        <input class="mt-2 btn btn-primary" value="SEND" type="submit">
+                                        {{form|crispy}}
+                                        <input class="mt-2 btn btn-primary" value="Exporter fichier excel" type="submit">
                                       </form>
                                   </div>
                               </div>

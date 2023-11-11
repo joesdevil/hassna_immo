@@ -17,12 +17,12 @@ class CategoryCreateForm(forms.ModelForm):
 class AddProject(forms.ModelForm):
     class Meta:
         model = Project
-        fields = ["name","type","nbrtotalLots","Localisation", "nbILOT", "Description" ]
+        fields = ["nom","type","nbrLotsTotal","Localisation", "nbILOT", "Observation" ]
 
 class StockCreateForm(forms.ModelForm):
     class Meta:
         model = Stock
-        fields = ['nomProject','numLOT','numBien','bloc','etage','cote','vue','type','superficieHabitable','superficieUtil','prixM2HorsTaxe','prixM2TTC',' prixVenteM2','montantHorsTaxe','montantTTC','montantVente','etat','dateReservation','Observatioin']
+        fields = ['nomProject','numLOT','numBien','bloc','etage','cote','vue','typeBien','superficieHabitable','superficieUtil','prixM2HorsTaxe','prixM2TTC','prixVenteM2','montantHorsTaxe','montantTTC','montantVenteTotal','etat','Observatioin']
 
     # def clean_category(self):
     #     category = self.cleaned_data.get('category')
@@ -58,12 +58,13 @@ class StockSearchForm(forms.ModelForm):
 
     class Meta:
         model = Stock
-        fields = ['category',  ]
+        fields = ['typeBien','etat']
+
         
 
 class DepSearchForm(forms.Form):
     
-    user = forms.CharField(required=False)
+    # user = forms.CharField(required=False)
     export_to_CSV = forms.BooleanField(required=False)
          
 
@@ -71,14 +72,15 @@ class DepSearchForm(forms.Form):
 class ProjectUpdateForm(forms.ModelForm):
     class Meta:
         model = Project
-        fields = ['name','country', 'state', 'city','start_date','end_date' ]
+        fields =["nom","type","nbrLotsTotal","Localisation", "nbILOT", "Observation" ]
         
 
 
 class StockUpdateForm(forms.ModelForm):
     class Meta:
         model = Stock
-        fields = ['project','category', 'item_name', 'price','block','etage','apartement','quantity', 'image','date']
+        fields = ['nomProject','numLOT','numBien','bloc','etage','cote','vue','typeBien','superficieHabitable','superficieUtil','prixM2HorsTaxe','prixM2TTC','prixVenteM2','montantHorsTaxe','montantTTC','montantVenteTotal','etat','Observatioin']
+
         
     
 class TaskUpdateForm(forms.ModelForm):
@@ -90,24 +92,27 @@ class TaskUpdateForm(forms.ModelForm):
 class IssueForm(forms.ModelForm):
     class Meta:
         model = Stock
-        fields = ['issue_quantity', 'issued_to']
+        fields = ['nomProject','numLOT','numBien','bloc','etage','cote','vue','typeBien','superficieHabitable','superficieUtil','prixM2HorsTaxe','prixM2TTC','prixVenteM2','montantHorsTaxe','montantTTC','montantVenteTotal','etat','Observatioin']
+
 
 
 class ReceiveForm(forms.ModelForm):
     class Meta:
         model = Stock
-        fields = ['receive_quantity']
+        fields = ['nomProject','numLOT','numBien','bloc','etage','cote','vue','typeBien','superficieHabitable','superficieUtil','prixM2HorsTaxe','prixM2TTC','prixVenteM2','montantHorsTaxe','montantTTC','montantVenteTotal','etat','Observatioin']
+
 
 
 class ReorderLevelForm(forms.ModelForm):
     class Meta:
         model = Stock
-        fields = ['re_order']
+        fields = ['nomProject','numLOT','numBien','bloc','etage','cote','vue','typeBien','superficieHabitable','superficieUtil','prixM2HorsTaxe','prixM2TTC','prixVenteM2','montantHorsTaxe','montantTTC','montantVenteTotal','etat','Observatioin']
+
 
 class AddTaskForm(forms.ModelForm):
     class Meta:
         model = AddTask
-        fields = ['customer','product',"phone_number","total_amount","payement_type","parts","deposit_amount",'quantity', 'date' ]
+        fields = ['customer','product' ,"total_amount",'dateReservation',"payement_type","parts",'NextdatePayement',"deposit_amount" ]
 
 
 class AddCountry(forms.ModelForm):
@@ -131,30 +136,30 @@ class AddCity(forms.ModelForm):
 class DependentDropdownForm(forms.ModelForm):
     class Meta:
         model = Person
-        fields = ['name','country','state','city','phone','email']
+        fields = ['nom','dateNaissance','lieuNaissance','phone','email','idIdentite','nomDossier','dateDossier','idBienDemande']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.fields['state'].queryset = State.objects.none()
-        if 'country' in self.data:
-            try:
-                country_idm = int(self.data.get('country'))
-                self.fields['state'].queryset = State.objects.filter(country_id=country_idm).order_by('name')
-            except(ValueError, TypeError):
-                pass
-        elif self.instance.pk:
-            self.fields['state'].queryset = self.instance.country.state_set.order_by('name')
+        # self.fields['state'].queryset = State.objects.none()
+        # if 'country' in self.data:
+        #     try:
+        #         country_idm = int(self.data.get('country'))
+        #         self.fields['state'].queryset = State.objects.filter(country_id=country_idm).order_by('name')
+        #     except(ValueError, TypeError):
+        #         pass
+        # elif self.instance.pk:
+        #     self.fields['state'].queryset = self.instance.country.state_set.order_by('name')
 
-        self.fields['city'].queryset = City.objects.none()
-        if 'state' in self.data:
-            try:
-                state_idm = int(self.data.get('state'))
-                self.fields['city'].queryset = City.objects.filter(state_id=state_idm).order_by('name')
-            except(ValueError, TypeError):
-                pass
-        elif self.instance.pk:
-            self.fields['city'].queryset = self.instance.state.city_set.order_by('name')
+        # self.fields['city'].queryset = City.objects.none()
+        # if 'state' in self.data:
+        #     try:
+        #         state_idm = int(self.data.get('state'))
+        #         self.fields['city'].queryset = City.objects.filter(state_id=state_idm).order_by('name')
+        #     except(ValueError, TypeError):
+        #         pass
+        # elif self.instance.pk:
+        #     self.fields['city'].queryset = self.instance.state.city_set.order_by('name')
 
 
 class AddScrumListForm(forms.ModelForm):

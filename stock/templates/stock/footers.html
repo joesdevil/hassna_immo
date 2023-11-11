@@ -3,7 +3,7 @@
                 <div class="nk-footer">
                     <div class="container-fluid">
                         <div class="nk-footer-wrap">
-                            <div class="nk-footer-copyright"> &copy; 2023 Stock Inventory by <a href="/" >Salem sif eddine</a>
+                            <div class="nk-footer-copyright"> &copy; 2023 ImmoAgency <a href="/" >Hassna belhemri</a>
                             </div>
                             <div class="nk-footer-links">
                                 <ul class="nav nav-sm">
@@ -55,6 +55,49 @@
     });
 
 </script>
+
+ {% for every in reservation %} 
+ 
+   
+   {% if every.NextdatePayement.date <  present_date  %} 
+  <script>
+    setTimeout(() => {
+      Swal.fire({
+          position: 'center',
+          icon: 'error',
+          title: '{{every.customer}} forgot to pay his {{every.remaining_parts}} parts',
+          showConfirmButton: true,
+          timer: 35000
+          })
+  }, '{{forloop.counter}}'*5000);
+  </script>
+  
+       
+   {% endif %} 
+
+   {% if every.NextdatePayement.date ==  present_date   %} 
+   <script>
+    setTimeout(() => {
+        Swal.fire({
+            position: 'center',
+            icon: 'error',
+            title: '{{every.customer}} have to pay his {{every.remaining_parts}} parts today',
+            showConfirmButton: true,
+            timer: 55000
+            })
+    }, '{{forloop.counter}}'*8000);
+   </script>
+  
+  
+       
+   {% endif %} 
+
+   
+ 
+
+
+
+ {% endfor %} 
 
     <script src="{% static 'js/sweetalert2.all.min.js' %}"></script>
 {% for message in messages %}
@@ -325,7 +368,7 @@ $(document).ready(function(){
   };
    var solidDataChart = {
     labels: {{ label_item|safe }},
-    dataUnit: 'Items',
+    dataUnit: 'M2',
     lineTension: .4,
     legend: true,
     datasets: [{
@@ -553,13 +596,24 @@ $(document).ready(function(){
   } // init pie chart
 
  var pieItemData = {
-    labels: {{ label_item|safe }},
-    dataUnit: 'items',
+    labels: {{ label_item1|safe }},
+    dataUnit: 'logements(appartements et locaux et services) total dans le projet',
     legend: false,
     datasets: [{
       borderColor: "#fff",
       background: ["#b695ff", "#f4aaa4", "#8feac5", "#2c3782", "#20c997"],
-      data: {{ data|safe }}
+      data: {{ data1|safe }}
+    }]
+  };
+
+  var pieItemData1 = {
+    labels: {{ label_item11|safe }},
+    dataUnit: 'parts',
+    legend: false,
+    datasets: [{
+      borderColor: "#fff",
+      background: ["#b695ff", "#f4aaa4", "#8feac5", "#2c3782", "#20c997"],
+      data: {{ data11|safe }}
     }]
   };
 
@@ -634,14 +688,14 @@ $(document).ready(function(){
 
 
   pieChart();
-  var doughnutChartData = {
-    labels:  {{ label_item|safe }},
-    dataUnit: 'Item',
+  var doughnutChartData1 = {
+    labels:  {{ label_item_p|safe }},
+    dataUnit: 'Biens',
     legend: false,
     datasets: [{
       borderColor: "#fff",
       background: ["#b695ff", "#f4aaa4", "#2c3782", "#20c997"],
-      data: {{ data|safe }}
+      data: {{ data_p|safe }}
     }]
   };
    var doughnutItemData = {
@@ -804,6 +858,8 @@ $(document).ready(function(){
   polarAreaChart();
 }(NioApp, jQuery);
     </script>
+
+ 
 </body>
 
 </html>

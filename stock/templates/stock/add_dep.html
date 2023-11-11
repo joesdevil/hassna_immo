@@ -30,7 +30,7 @@
                                              
                                         </ul>
                                       {% csrf_token %}
-                                      {{form}}
+                                      {{form|crispy}}
                                       
                                       <input class="mt-2 btn btn-primary" type="submit" value="Add Stock">
                                     </form>

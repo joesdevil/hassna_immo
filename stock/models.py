@@ -15,6 +15,7 @@ Projet_type = (
 )
 
 Bien_type = (
+    ('Appartement F2', 'Appartement F2'),
     ('Appartement F3', 'Appartement F3'),
     ('Appartement F4', 'Appartement F4'),
     ('Appartement F5', 'Appartement F5'),
@@ -24,8 +25,8 @@ Bien_type = (
 
 Etat_Bien_Type = (
     ('Libre','Libre'),
-    (' Réservé', 'Réservé'),
-    (' Vendu','Vendu')
+    ('Réservé', 'Réservé'),
+    ('Vendu','Vendu')
 )
 
 class Category(models.Model):
@@ -69,7 +70,9 @@ class Person(models.Model):             #acquereur
     dateDossier = models.DateTimeField(auto_now_add=False, auto_now=False, null=True)
     idBienDemande =  models.IntegerField()           #affiche les biens dispo pour choisir
     def __str__(self):
-        return str(self.name)
+        return str(self.nom)
+    
+
 
 
 
@@ -83,7 +86,7 @@ class Project(models.Model):
 
 
     def __str__(self):
-        return str(self.name)
+        return str(self.nom)
     
 
 class Stock(models.Model):        #biens
@@ -96,20 +99,34 @@ class Stock(models.Model):        #biens
     vue = models.CharField(max_length=50, blank=True, null=True)
     typeBien = models.CharField(choices=Bien_type, max_length=100)
     superficieHabitable = models.IntegerField(default='0', blank=True, null=True)
-    superficieUtil= models.IntegerField(max_length=50, blank=True, null=True)
+    superficieUtil= models.IntegerField(  blank=True, null=True)
     prixM2HorsTaxe = models.IntegerField(default='0', blank=True, null=True)
-    prixM2TTC = models.IntegerField(max_length=50, blank=True, null=True)
-    prixVenteM2 = models.IntegerField(max_length=50, blank=True, null=True)
-    montantHorsTaxe = models.IntegerField(max_length=50, blank=True, null=True)        #montantHorsTaxe =  prixM2HorsTaxe * superficieHabitable
-    montantTTC = models.IntegerField(max_length=10000)                 #montantTTC =  prixM2TTC * superficieHabitable
-    montantVenteTotal = models.IntegerField(max_length=50, blank=True, null=True)          #montantVenteTotal =  montantVenteM2 * superficieHabitable
+    prixM2TTC = models.IntegerField( blank=True, null=True)
+    prixVenteM2 = models.IntegerField(  blank=True, null=True)
+    montantHorsTaxe = models.IntegerField(  blank=True, null=True)        #montantHorsTaxe =  prixM2HorsTaxe * superficieHabitable
+    montantTTC = models.IntegerField( )                 #montantTTC =  prixM2TTC * superficieHabitable
+    montantVenteTotal = models.IntegerField(  blank=True, null=True)          #montantVenteTotal =  montantVenteM2 * superficieHabitable
     etat = models.CharField(choices=Etat_Bien_Type, max_length=100)        #libre reservé vendu
-    dateReservation= models.DateTimeField(auto_now_add=False, auto_now=True)
+    
     Observatioin = models.TextField()
     export_to_csv = models.BooleanField(default=False)
 
+    class Meta:
+        verbose_name = "Bien"   
+        verbose_name_plural = "Biens" 
+
     def __str__(self):
-        return self.item_name
+        return self.nomProject
+    
+    def save(self, *args, **kwargs):
+        # Perform your calculations or custom logic here before saving
+        # For example, let's say you want to double the quantity before saving
+        self.montantVenteTotal  = self.prixVenteM2 * self.superficieHabitable
+
+        # Call the save method of the parent class to actually save the instance
+        super().save(*args, **kwargs)
+    
+    
 
 
 class StockHistory(models.Model):
@@ -162,23 +179,35 @@ class Contacts(models.Model):
 
 
 class AddTask(models.Model):
-    user=models.ForeignKey(User, on_delete=models.CASCADE)
+    # user=models.ForeignKey(User, on_delete=models.CASCADE)
     customer = models.ForeignKey(Person, on_delete=models.CASCADE)
     product = models.ForeignKey(Stock, on_delete=models.CASCADE)
-    quantity = models.IntegerField()
   
     total_amount=models.CharField(max_length=10000)
     
-    phone_number = models.CharField(max_length=50, blank=True, null=True)
+    # phone_number = models.CharField(max_length=50, blank=True, null=True)
     deposit_amount=models.FloatField(max_length=950,  default= 0)
     payement_type = models.CharField(choices=payment_method, max_length=100)
     parts = models.IntegerField(default='0', blank=True, null=True)
-    date = models.DateTimeField(auto_now_add=False, auto_now=False )
+    remaining_parts = models.IntegerField(default='0', blank=True, null=True)
+    dateReservation= models.DateTimeField(auto_now_add=False, auto_now=False)
+    NextdatePayement= models.DateTimeField(auto_now_add=False, auto_now=False,null=True,blank=True)
     confirmed=models.BooleanField(default=False)
     
     def __str__(self):
         return str(self.customer)
+    
+    class Meta:
+        verbose_name = "Reservation"   
+        verbose_name_plural = "Reservations"
 
+    def save(self, *args, **kwargs):
+        # Perform your calculations or custom logic here before saving
+        # For example, let's say you want to double the quantity before saving
+        self.total_amount  = self.product.montantVenteTotal
+
+        # Call the save method of the parent class to actually save the instance
+        super().save(*args, **kwargs)
 
 
 class User(models.Model):

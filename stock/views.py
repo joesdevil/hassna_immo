@@ -32,11 +32,18 @@ def new_register(request):
 def get_client_ip(request):
     labels = []
     label_item = []
+    label_item1 = []
+    label_item11 = []
     label_item_b = []
+    label_item_p = []
+    reservation=AddTask.objects.all()
     data_b=[]
     data_price=[]
     label_price=[]
     data = []
+    data1 = []
+    data11 = []
+    data_p = []
     issue_data = []
     receive_data = []
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
@@ -52,23 +59,52 @@ def get_client_ip(request):
         u.save()
         return ip
     queryset = Stock.objects.all()
+    querysetProj=Project.objects.all()
     querys = Category.objects.all()
+    querysetpart=AddTask.objects.all()
     
     queryset_task=AddTask.objects.filter(confirmed=True)
     for chart in queryset_task:
-        label_price.append(str(chart.date.date()) )
-        data_price.append(float(chart.total_amount)-(chart.product.purchasing_price*chart.quantity))
+        label_price.append(str(chart.dateReservation.date()) )
+        data_price.append(chart.deposit_amount)
     print("date price: ",data_price)
+
+
     for chart in queryset:
-        label_item.append(chart.item_name)
-        data.append(chart.quantity)
-        issue_data.append(chart.issue_quantity)
-        receive_data.append(chart.receive_quantity)
+        label_item.append(chart.nomProject)
+        data.append(chart.superficieHabitable)
+        issue_data.append(chart.superficieHabitable)
+        receive_data.append(chart.superficieHabitable)
+
+    for chart in querysetpart:
+        label_item11.append(chart.customer.nom)
+        data11.append(chart.remaining_parts)
+
+    
+    label_item_p.append(len(queryset.filter(etat="Libre")))
+    data_p.append(len(queryset.filter(etat="Libre")))
+
+    label_item_p.append(len(queryset.filter(etat="Réservé")))
+    data_p.append(len(queryset.filter(etat="Réservé")))
+
+    label_item_p.append(len(queryset.filter(etat="Vendu")))
+    data_p.append(len(queryset.filter(etat="Vendu")))
+       
+    label_item_p=["Libre", "Réservé", "Vendu"]
+        
+    
+
+
+    for chart in querysetProj:
+        label_item1.append(chart.nom)
+        data1.append(chart.nbrLotsTotal)
+         
+
     for chart in querys:
         labels.append(str(chart.group))
 
     today = datetime.datetime.now().date()
-    task_count_by_day = AddTask.objects.annotate(day=TruncDate('date')).values('day').annotate(count=Count('id')).order_by('day')
+    task_count_by_day = AddTask.objects.annotate(day=TruncDate('dateReservation')).values('day').annotate(count=Count('id')).order_by('day')
     # print("task: ",task_count_by_day )
     for task_count in task_count_by_day :
         data_b.append(task_count["count"])
@@ -83,6 +119,7 @@ def get_client_ip(request):
     body = Project.objects.all().count()
     mind = AddTask.objects.all().count()
     soul = Person.objects.all().count()
+    reservation=AddTask.objects.all()
     context = {
         'count': count,
         'body': body,
@@ -90,49 +127,61 @@ def get_client_ip(request):
         'soul': soul,
         'labels': labels,
         'data': data,
+        'data1': data1,
+        'data11': data11,
         'data_b': data_b,
         'issue_data': issue_data,
         'receive_data': receive_data,
         'label_item': label_item,
+        'label_item1': label_item1,
+        'label_item11': label_item11,
         'label_item_b': label_item_b,
         'data_price':data_price,
-        'label_price':label_price
+        'data_p':data_p,
+        'label_item_p': label_item_p,
+        'reservation':reservation,
+        'label_price':label_price,
+         'present_date': datetime.date.today()
     }
     return render(request, 'stock/home.html', context)
 
 import datetime
 @login_required
 def view_stock(request):
+    reservation=AddTask.objects.all()
     title = "VIEW STOCKS"
     everything = Stock.objects.all()
     try:
-        type=request.GET["type"]
-        if type=='nostock':
-            everything = everything.filter(quantity=0)
-        elif type=='stock' :
-            everything = everything.filter(quantity__gte=1)
+        type=request.GET["typeBien"]
+        etat=request.GET["etat"]
+        if type and etat:
+            everything = everything.filter(typeBien=type,etat=etat)
+        elif type:
+            everything = everything.filter(typeBien=type)
+        else :
+            everything = everything.filter(etat=False)
                  
     except:
         pass
     form = StockSearchForm(request.POST or None)
     present_date= datetime.date.today()
     five_days_ahead= present_date + datetime.timedelta(days=5)
-    context = {'everything': everything, 'form': form,'present_date':present_date,'five_days_ahead':five_days_ahead}
+    context = {'everything': everything,'reservation':reservation, 'form': form,'present_date':present_date,'five_days_ahead':five_days_ahead}
     if request.method == 'POST':
         print("posted post")
-        category = form['category'].value()
-        everything = Stock.objects.filter(category_id = form['category'].value())
-        if category != '':
-            everything = everything.filter(category_id=category)
+        # type = form['type'].value()
+        # everything = Stock.objects.filter(typeBien = type)
+        # if type != '':
+        #     everything = everything.filter(category_id=type)
 
         if form['export_to_CSV'].value() == True:
             instance = everything
             wb = openpyxl.Workbook()
             ws = wb.active
-            ws.append(["ID",'ITEM NAME', 'BLOCK','ETAGE','APARTEMENT','CATEGORY',"PRICE", 'QUANTITY'])
+            ws.append(["ID",'Nom', 'BLOCK','ETAGE','COTE','Type Bien',"superficie Habitable", 'prixVenteM2','montant Vente Total','Etat'])
 
             for stock in instance:
-                ws.append([stock.id, stock.item_name,stock.block,stock.etage,stock.apartement,stock.category.group,stock.price, stock.quantity])
+                ws.append([stock.id, stock.nomProject,stock.bloc,stock.etage,stock.cote,stock.typeBien,stock.typeBien, stock.prixVenteM2,stock.montantVenteTotal,stock.etat])
 
             # Prepare the response for Excel download
             response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
@@ -140,7 +189,7 @@ def view_stock(request):
             wb.save(response)
             return response
     
-        context = {'title': title, 'everything': everything, 'form': form,'present_date':present_date,'five_days_ahead':five_days_ahead}
+        context = {'title': title,'present_date': datetime.date.today(), 'everything': everything,'reservation':reservation, 'form': form,'present_date':present_date,'five_days_ahead':five_days_ahead}
     return render(request, 'stock/view_stock.html', context)
 
 
@@ -179,6 +228,7 @@ def scrum_view(request):
 
 @login_required
 def add_stock(request):
+    reservation=AddTask.objects.all()
     print("hmmmm")
     title = 'Add Reservation'
     add = Stock.objects.all()
@@ -193,7 +243,7 @@ def add_stock(request):
     else:
         form = StockCreateForm()
         print("get res")
-    context = {'add': add, 'form': form, 'title': title}
+    context = {'add': add, 'form': form,'present_date': datetime.date.today(),'reservation':reservation, 'title': title}
      
     return render(request, 'stock/add_stock.html', context)
 
@@ -285,6 +335,7 @@ def add_loc1(request):
 
 @login_required
 def add_loc2(request):
+    reservation=AddTask.objects.all()
      
     title = 'Add City'
     add = Category.objects.filter(user=request.user)
@@ -319,24 +370,26 @@ def add_loc2(request):
 
 @login_required
 def update_stock(request, pk):
+    reservation=AddTask.objects.all()
     title = 'Update Stock'
     update = Stock.objects.get(id=pk)
     form = StockUpdateForm(instance=update)
     if request.method == 'POST':
         form = StockUpdateForm(request.POST, request.FILES, instance=update)
         if form.is_valid():
-            image_path = update.image.path
-            if os.path.exists(image_path):
-                os.remove(image_path)
+            # image_path = update.image.path
+            # if os.path.exists(image_path):
+                # os.remove(image_path)
             form.save()
             messages.success(request, 'Successfully Updated!')
             return redirect('/view_stock')
-    context = {'form': form, 'update': update, 'title': title}
+    context = {'form': form,'present_date': datetime.date.today(), 'update': update,'reservation':reservation, 'title': title}
     return render(request, 'stock/add_stock.html', context)
 
 
 @login_required
 def update_project(request, pk):
+    reservation=AddTask.objects.all()
     title = 'Update Project'
     update = Project.objects.get(id=pk)
     form = ProjectUpdateForm(instance=update)
@@ -347,13 +400,14 @@ def update_project(request, pk):
             form.save()
             messages.success(request, 'Successfully Updated!')
             return redirect('/view_project')
-    context = {'form': form, 'update': update, 'title': title}
+    context = {'form': form, 'update': update,'present_date': datetime.date.today(), 'reservation':reservation,'title': title}
     return render(request, 'stock/add_project.html', context)
 
 
 
 @login_required
 def update_task(request, pk):
+    reservation=AddTask.objects.all()
     title = 'Update Task'
     update = AddTask.objects.get(id=pk)
     form = TaskUpdateForm(instance=update)
@@ -361,23 +415,13 @@ def update_task(request, pk):
         form = TaskUpdateForm(request.POST,  instance=update)
         if form.is_valid():
             
-            update.user.id=form['user'].value()
-            update.customer.id=form['customer'].value()
-            update.product.id=form['product'].value()
-            update.quantity=form['quantity'].value()
-            update.total_amount=form['total_amount'].value()
-            update.phone_number=form['phone_number'].value()
-            update.deposit_amount=form['deposit_amount'].value()
-            update.payement_type=form['payement_type'].value()
-            update.parts=form['parts'].value()
-            update.date=form['date'].value()
-            update.confirmed=form['confirmed'].value()
-            update.save()
+            # update.user.id=form['user'].value()
+            form.save()
 
             
             messages.success(request, 'Successfully Updated!')
             return redirect('/task_view')
-    context = {'form': form, 'update': update, 'title': title}
+    context = {'form': form,'present_date': datetime.date.today(), 'update': update, 'reservation':reservation,'title': title}
     return render(request, 'stock/add_task.html', context)
 
 
@@ -396,16 +440,24 @@ def delete_task(request, pk):
 
 
 @login_required
+def delete_project(request, pk):
+    Project.objects.get(id=pk).delete()
+    messages.success(request, 'Your Project has been deleted.')
+    return redirect('/view_project')
+
+@login_required
 def stock_detail(request, pk):
+    reservation=AddTask.objects.all()
     detail = Stock.objects.get(id=pk)
     context = {
-        'detail': detail
+        'detail': detail,'reservation':reservation,
     }
     return render(request, 'stock/stock_detail.html', context)
 
 
 @login_required
 def issue_item(request, pk):
+    reservation=AddTask.objects.all()
     issue = Stock.objects.get(id=pk)
     form = IssueForm(request.POST or None, instance=issue)
     if form.is_valid():
@@ -434,6 +486,7 @@ def issue_item(request, pk):
 
 @login_required
 def receive_item(request, pk):
+    reservation=AddTask.objects.all()
     receive = Stock.objects.get(id=pk)
     form = ReceiveForm(request.POST or None, instance=receive)
     if form.is_valid():
@@ -456,6 +509,7 @@ def receive_item(request, pk):
 
 @login_required
 def co_order(request, pk):
+    reservation=AddTask.objects.all()
     order = AddTask.objects.get(id=pk)
     order.confirmed = True
     order.save()
@@ -465,6 +519,7 @@ def co_order(request, pk):
 
 @login_required
 def re_order(request, pk):
+    reservation=AddTask.objects.all()
     order = Stock.objects.get(id=pk)
     form = ReorderLevelForm(request.POST or None, instance=order)
     if form.is_valid():
@@ -481,6 +536,7 @@ def re_order(request, pk):
 
 @login_required()
 def view_history(request):
+    reservation=AddTask.objects.all()
     title = "STOCK HISTORY"
     history = StockHistory.objects.all()
     form = StockHistorySearchForm(request.POST or None)
@@ -531,93 +587,119 @@ def view_history(request):
 
 @login_required
 def dependent_forms(request):
+    reservation=AddTask.objects.all()
     title = 'Dependent Forms'
     form = DependentDropdownForm()
     if request.method == 'POST':
         form = DependentDropdownForm(request.POST )
         if form.is_valid():
-            Person.objects.get_or_create(
-                name=request.POST["name"],country_id= request.POST["country"],
-                state_id = request.POST["state"],city_id = request.POST["city"],
-                user = request.user
-            )
+            form.save()
              
-            messages.success(request, str(form['name'].value()) + ' Successfully Added!')
+             
+            messages.success(request,   ' Successfully Added!')
             return redirect('/depend_form_view')
-    context = {'form': form, 'title': title}
+    context = {'form': form,'present_date': datetime.date.today(), 'reservation':reservation,'title': title}
     return render(request, 'stock/add_dep.html', context)
 
 
 @login_required
 def add_task(request):
-    title = 'Dependent Forms'
+    reservation=AddTask.objects.all()
+    title = 'RESERVATION'
     form = AddTaskForm()
     if request.method == 'POST':
         form = AddTaskForm(request.POST )
         if form.is_valid():
-            updatestock=Stock.objects.filter(id=request.POST["product"]).first()
-            if int(request.POST["quantity"]) <= updatestock.quantity:
-                updatestock.quantity  = updatestock.quantity - int(request.POST["quantity"]) 
+            print("form s valid"   )
+            updatestock=Stock.objects.filter(pk=request.POST["product"]).first()
+            print("query is ", updatestock.etat)
+            if updatestock.etat == "Libre":
+                print("updatestock.etat ==  Libre ")
+                confirmed_ord=False
+                if form["deposit_amount"] == updatestock.montantVenteTotal:
+                    print("updatestock.etat ==  Vendu ")
+               
+                    updatestock.product.etat  = "Vendu" 
+                    confirmed_ord=True
+                # elif form["deposit_amount"] > form["total_amount"]:
+                
+                #     updatestock.etat  = "Libre"
+                else:
+                    updatestock.etat  = "Réservé"
+                    confirmed_ord=True
+                    print("updatestock.etat == Réservé")
+
+                # updatestock.product.save()
                 updatestock.save()
-                total_amount= float(request.POST["quantity"]) * float(request.POST["total_amount"])
+                print("saving stock")
+               
                 
                 
                 AddTask.objects.get_or_create(
                     customer_id=request.POST["customer"], 
-                    user = request.user,
-                    product_id=request.POST["product"],
-                    quantity=request.POST["quantity"],
-                    total_amount=request.POST["total_amount"],
-                     
-                    date=request.POST["date"]
+                    # user = request.user,
+                    product_id=updatestock.id,
+                    deposit_amount=request.POST["deposit_amount"],
+                    total_amount=updatestock.montantVenteTotal,
+                    parts=request.POST["parts"],
+                    dateReservation=request.POST["dateReservation"],
+                    confirmed=confirmed_ord
                 )
                 
-                messages.success(request, str(form['customer'].value()) + ' Successfully Added!')
+                print("saving AddTask")
+                messages.success(request, str(form['customer'].value()) + f' à été {updatestock.etat} avec success!')
                 return redirect('/task_view')
             
             else:
                  
-                messages.error(request, str(form['customer'].value()) + f' Quantity limited, just {updatestock.quantity}!')
+                messages.error(request, str(form['customer'].value()) +  ' est déja ' +updatestock.etat)
                 
                 return redirect('/add_task')
-    context = {'form': form, 'title': title}
+    context = {'form': form, 'reservation':reservation,'present_date': datetime.date.today(),'title': title}
     return render(request, 'stock/add_task.html', context)
 
 @login_required
 def task_view(request):
+    reservation=AddTask.objects.all()
     title = "VIEW STOCKS"
     everything = AddTask.objects.all()
     form = StockSearchForm(request.POST or None)
     
     try:
-        type=request.GET["type"]
-        if type=='confirmed':
-            everything = everything.filter(confirmed=True)
-        elif type=='unconfirmed' :
-            everything = everything.filter(confirmed=False)
+        type=request.GET["typeBien"]
+        etat=request.GET["etat"]
+        if type and etat:
+            everything = everything.filter(typeBien=type,etat=etat)
+        elif type:
+            everything = everything.filter(typeBien=type)
+        else :
+            everything = everything.filter(etat=False)
                  
     except:
         pass
         
         
     present_date= datetime.date.today()
-    context = {'everything': everything, 'form': form,"present_date":present_date}
+    context = {'everything': everything,'reservation':reservation, 'form': form,"present_date":present_date}
     if request.method == 'POST':
         print("posted post")
-        category = form['category'].value()
-        everything = AddTask.objects.all()
-        if category != '':
-            everything = everything.filter(category_id=category)
+        # category = form['category'].value()
+        # everything = AddTask.objects.all()
+        # if category != '':
+        #     everything = everything.filter(category_id=category)
 
         if form['export_to_CSV'].value() == True:
             instance = everything
             wb = openpyxl.Workbook()
             ws = wb.active
-            ws.append(['CUSTOMER', 'PROJECT','BIEN','BLOCK','ETAGE','APARTEMENT',"PAYEMENT TYPE",   'QUANTITY', 'TOTAL AMOUNT','DEPOSIT AMOUNT','PHONE NUMBER', "DATE"])
+            ws.append(['CUSTOMER', 'PROJECT','BIEN','BLOCK','ETAGE','COTE',"superficie Habitable","prix Vente M2","montant Vente Total","etat",    "parts","parts remains" ,  'TOTAL AMOUNT','DEPOSIT AMOUNT',"PAYEMENT TYPE", 'PHONE NUMBER', "DATE","confirmed"])
 
             for instance1 in instance:
                 print("length is", len(instance))
-                ws.append([str(instance1.customer), str(instance1.product),str(instance1.product),str(instance1.product.block),str(instance1.product.etage),str(instance1.product.apartement),instance1.payement_type, instance1.quantity,instance1.total_amount,instance1.deposit_amount,instance1.phone_number,str(instance1.date.date()) ])
+                ws.append([str(instance1.customer), str(instance1.product),str(instance1.product),str(instance1.product.bloc),str(instance1.product.etage),
+                           str(instance1.product.cote),instance1.product.superficieHabitable,instance1.product.prixVenteM2,instance1.product.montantVenteTotal,
+                           instance1.product.etat,instance1.parts,instance1.parts,  instance1.total_amount,instance1.deposit_amount,instance1.payement_type,
+                           instance1.customer.phone,str(instance1.dateReservation.date()),instance1.confirmed ])
 
             # Prepare the response for Excel download
             response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
@@ -625,12 +707,13 @@ def task_view(request):
             wb.save(response)
             return response
         
-        context = {'title': title, 'everything': everything, 'form': form,"present_date":present_date}
+        context = {'title': title,'present_date': datetime.date.today(), 'reservation':reservation,'everything': everything, 'form': form,"present_date":present_date}
     return render(request, 'stock/task_view.html', context)
 
 
 @login_required
 def dependent_forms_update(request, pk):
+    reservation=AddTask.objects.all()
     
     title = 'Update Form'
     dependent_update = Person.objects.get(id=pk)
@@ -644,6 +727,8 @@ def dependent_forms_update(request, pk):
     context = {
         'title': title,
         'dependent_update': dependent_update,
+        'reservation':reservation,
+        'present_date': datetime.date.today(),
         'form': form
     }
     return render(request, 'stock/add_dep.html', context)
@@ -651,20 +736,22 @@ def dependent_forms_update(request, pk):
 
 @login_required
 def dependent_forms_view(request):
+    reservation=AddTask.objects.all()
     title = 'Dependent Views'
-    viewers = Person.objects.filter(user=request.user)
+    # viewers = Person.objects.filter(user=request.user)
+    viewers=Person.objects.all()
     form = DepSearchForm()
     
     if request.method =='POST':
         form=DepSearchForm(request.POST)
         if form.is_valid():
-            user = form['user'].value()
-            everything = AddTask.objects.all()
+            # user = form['user'].value()
+            everything = Person.objects.all()
             
-            if user != '':
+            if form['export_to_CSV'].value() == True:
                 try:
-                    current=Person.objects.get(name=user)
-                    everything = everything.filter(customer=current)
+                    current=Person.objects.all()
+                    everything = everything.all()
                 except:
                     messages.error(request, 'User do not exist')
                     return redirect('/depend_form_view')
@@ -673,13 +760,13 @@ def dependent_forms_view(request):
                 instance = everything
                 wb = openpyxl.Workbook()
                 ws = wb.active
-                ws.append(['customer', 'ITEM NAME','PRICE PER ITEM','TOTAL','BENIFITS'
-                           ,'DATE','PLACE TO DELIVER'])
+                ws.append(['ID', 'NOM','date Naissance  ','lieu Naissance','phone'
+                           ,'email','date Dossier'])
 
                 for task in instance:
-                    ws.append([task.customer.name, task.product.item_name,task.price_per_item, 
-                               task.total_amount,(float(task.total_amount)-float(task.deposit_amount)),
-                               task.date.date(),f"{task.customer.city} - {task.customer.state}"])
+                    ws.append([task.id, task.nom,str(task.dateNaissance.date()), 
+                               task.lieuNaissance,task.phone,task.email,
+                               str(task.dateDossier.date()) ])
 
                 # Prepare the response for Excel download
                 response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
@@ -688,12 +775,13 @@ def dependent_forms_view(request):
                 return response
     
             
-    context = {'title': title, 'view': viewers,'form':form}
+    context = {'title': title,'present_date': datetime.date.today(), 'reservation':reservation,'view': viewers,'form':form}
     return render(request, 'stock/depend_form_view.html', context)
 
 
  
 def delete_dependant(request, pk):
+    reservation=AddTask.objects.all()
     Person.objects.get(id=pk).delete()
     messages.success(request, 'Your file has been deleted.')
     return redirect('/depend_form_view')
@@ -707,6 +795,7 @@ def load_stats(request):
 
 
 def load_cities(request):
+    reservation=AddTask.objects.all()
     state_main_id = request.GET.get('state_id')
     cities = City.objects.filter(state_id=state_main_id)
     context = {'cities': cities}
@@ -715,6 +804,7 @@ def load_cities(request):
 
 @login_required
 def contact(request):
+    reservation=AddTask.objects.all()
     title = 'Contacts'
     people = Contacts.objects.all()
     form = ContactsForm(request.POST or None)
@@ -724,13 +814,14 @@ def contact(request):
             form.save()
             messages.success(request, 'Successfully Added')
             return redirect('/contacts')
-    context = {'people': people, 'form': form, 'title': title}
+    context = {'people': people,'present_date': datetime.date.today(),'reservation':reservation, 'form': form, 'title': title}
     return render(request, 'stock/contacts.html', context)
 
 
 @login_required
 def addProject(request):
     title = 'Add project'
+    reservation=AddTask.objects.all()
     form = AddProject(request.POST or None)
     if request.method == 'POST':
             form = AddProject(request.POST )
@@ -739,15 +830,19 @@ def addProject(request):
                 messages.success(request, 'Successfully Added')
                 return redirect('/view_project')
     
-    context={"form":form}
+    context={"form":form,'present_date': datetime.date.today(),'reservation':reservation,'reservation':reservation}
     return render(request, 'stock/add_project.html', context)
 
 @login_required
 def view_project(request):
     title = 'view project'
     everything = Project.objects.all()
-    
+    reservation=AddTask.objects.all()
+    present_date= datetime.date.today()
+   
     context={
-        'everything': everything
+        'everything': everything,
+        'reservation':reservation,
+        'present_date':present_date
     }
     return render(request, 'stock/project_view.html', context)

@@ -68,68 +68,25 @@
                                                 </tr><!-- .nk-tb-item -->
                                             </thead>
                                             <tbody>
-                                                
-                                                <script>
-                                                    '{% for every in everything %}'
-                                                     
-                                                     
-                                                    // '{% if every.date.date   == present_date  %}'
-                                                    // setTimeout(() => {
-                                                    //     Swal.fire({
-                                                    //         position: 'center',
-                                                    //         icon: 'success',
-                                                    //         title: 'you have a deivery today for {{every.name}}',
-                                                    //         showConfirmButton: true,
-                                                    //         timer: 35000
-                                                    //         })
-                                                    // }, '{{forloop.counter}}'*5000);
-                                                    
-                                                         
-                                                    // '{% endif %}'
-
-                                                    // '{% if every.date.date   < present_date  %}'
-                                                    // setTimeout(() => {
-                                                    //     Swal.fire({
-                                                    //         position: 'center',
-                                                    //         icon: 'error',
-                                                    //         title: 'you missed to deliver to {{every.name}}',
-                                                    //         showConfirmButton: true,
-                                                    //         timer: 55000
-                                                    //         })
-                                                    // }, '{{forloop.counter}}'*8000);
-                                                    
-                                                         
-                                                    // '{% endif %}'
-
-                                                     
-                                                   
-                                              
-
-
-                                            ' {% endfor %}'
-
-
-                                            
-                                                </script>
+                                               
                                                {% for every in everything %}
                                                 <tr class="nk-tb-item">
                                                     <td class="nk-tb-col">
                                                         <span class="tb-sub">{{forloop.counter}}</span>
                                                     </td>
-                                                    <td class="nk-tb-col tb-col-sm">
-                                                        <span class="tb-product">
-                                                            <!-- <span class="title"><a href="{% url 'stock_detail' every.id %}">{{ every.item_name }}</a></span> -->
-                                                            <span class="title"><a href="{% url 'stock_detail' every.id %}">{{ every.name }}</a></span>
-                                                            {% endif %}
-                                                        </span>
-                                                    </td>
-
                                                     <td class="nk-tb-col tb-col-md">
                                                         <span class="tb-sub">{{every.id}}</span>
                                                     </td>
-                                                    <td class="nk-tb-col tb-col-md">
-                                                        <span class="tb-sub">{{every.name}}</span>
+                                                    <td class="nk-tb-col tb-col-sm">
+                                                        <span class="tb-product">
+                                                            <!-- <span class="title"><a href="{% url 'stock_detail' every.id %}">{{ every.item_name }}</a></span> -->
+                                                            <span class="title"><a href="{% url 'stock_detail' every.id %}">{{ every.nom }}</a></span>
+                                                             
+                                                        </span>
                                                     </td>
+
+                                                    
+                                                    
                                                     <td class="nk-tb-col tb-col-md">
                                                         <span class="tb-sub">{{every.type}}</span>
                                                     </td>
@@ -143,7 +100,7 @@
                                                         <span class="tb-sub">{{every.nbILOT}}</span>
                                                     </td>
                                                     <td class="nk-tb-col tb-col-md">
-                                                        <span class="tb-sub">{{every.description}}</span>
+                                                        <span class="tb-sub">{{every.Observation}}</span>
                                                     </td>
                                                     
                                                     <td class="nk-tb-col nk-tb-col-tools">
@@ -154,7 +111,7 @@
                                                                     <div class="dropdown-menu dropdown-menu-right">
                                                                         <ul class="link-list-opt no-bdr">
                                                                             <li><a href="{% url 'update_project' every.id %}"><em class="icon ni ni-edit"></em><span>Edit Project</span></a></li>
-                                                                            <li><a href="{% url 'stock_detail' every.id %}"><em class="icon ni ni-eye"></em><span>View Product</span></a></li>
+                                                                            <!-- <li><a href="{% url 'stock_detail' every.id %}"><em class="icon ni ni-eye"></em><span>View Product</span></a></li> -->
                                                                             <li><a id="{{forloop.counter}}s"  href="javascript:void(0)"><em class="icon ni ni-trash" ></em><span>Remove Project</span></a></li>
                                                                         </ul>
                                                                     </div>
@@ -174,18 +131,18 @@
                                                 })
                                                 
                                                 swalWithBootstrapButtons.fire({
-                                                  title: 'Are you sure you want to delete {{every.name}}?',
+                                                  title: 'Are you sure you want to delete {{every.nom}}?',
                                                   text: "You won't be able to revert this!",
                                                   icon: 'warning',
                                                   showCancelButton: true,
-                                                  confirmButtonText: '<a href="{% url 'delete_task' every.id %}">Delete</a>',
+                                                  confirmButtonText: '<a href="{% url 'delete_project' every.id %}">Delete</a>',
                                                   cancelButtonText: 'Cancel',
                                                   reverseButtons: true
                                                 }).then((result) => {
                                                   if (result.isConfirmed) {
                                                     swalWithBootstrapButtons.fire(
                                                       'Deleted!',
-                                                      '{{every.name}} has been deleted.',
+                                                      '{{every.nom}} has been deleted.',
                                                       'success'
                                                     )
                                                   } else if (
