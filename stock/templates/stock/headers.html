@@ -23,6 +23,8 @@
      <link href="{% static 'css/navbar-top-fixed.css' %}" rel="stylesheet">
 </head>
 <body class="nk-body dark-mode npc-default has-sidebar ">
+    
+
  <div class="nk-app-root">
         <!-- main @s -->
         <div class="nk-main ">
@@ -140,6 +142,12 @@
                                         <span class="nk-menu-text">Register</span>
                                     </a>
                                 </li><!-- .nk-menu-item -->
+                                <li class="nk-menu-item">
+                                    <a href="/account/login" class="nk-menu-link">
+                                        <span class="nk-menu-icon"><em class="ni ni-signin"></em></span>
+                                        <span class="nk-menu-text">Login</span>
+                                    </a>
+                                </li><!-- .nk-menu-item -->
                                 {% endif %}
                             </ul><!-- .nk-menu -->
                         </div><!-- .nk-sidebar-menu -->
@@ -193,15 +201,16 @@
                                             </div>
                                             <div class="dropdown-inner">
                                                 <ul class="link-list">
-                                                    <li><a class="dark-switch" href="#"><em class="icon ni ni-moon"></em><span>Dark Mode</span></a></li>
+                                                    <li><a id="lightswitch" class="dark-switch" href="#"><em class="icon ni ni-moon"></em><span>Dark Mode</span></a></li>
                                                 </ul>
+                                                 
                                             </div>
                                             <div class="dropdown-inner">
                                                 <ul class="link-list">
                                                       {% if request.user.is_authenticated %}
-                                                    <li><a href="/accounts/logout"><em class="icon ni ni-signout"></em><span>Log out</span></a></li>
+                                                    <li><a href="/account/logout"><em class="icon ni ni-signout"></em><span>Log out</span></a></li>
                                                     {% else %}
-                                                    <li><a href="/accounts/login"><em class="icon ni ni-signout"></em><span>Log In</span></a></li>
+                                                    <li><a href="/account/login"><em class="icon ni ni-signout"></em><span>Log In</span></a></li>
                                                      {% endif %}
                                                 </ul>
                                             </div>
@@ -217,5 +226,5 @@
 
                 <!-- content @e -->
 
-
+                 
             <!-- wrap @e -->

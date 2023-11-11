@@ -23,7 +23,7 @@ def new_register(request):
         form = UserCreationForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('/accounts/login/')
+            return redirect('/account/login/')
     context = {'form': form}
     return render(request, 'stock/register.html', context)
 
@@ -846,3 +846,13 @@ def view_project(request):
         'present_date':present_date
     }
     return render(request, 'stock/project_view.html', context)
+
+from django.contrib.auth import logout
+def logout_view(request):
+    logout(request)
+    return redirect('/account/login') 
+
+
+from django.contrib.auth.views import LoginView
+class CustomLoginView(LoginView):
+    template_name = 'stock/login.html'

@@ -37,6 +37,9 @@ urlpatterns = [
     path('add_project', views.addProject, name='addProject'),
     path('view_project', views.view_project, name='view_project'),
     path('update_project/<str:pk>/', views.update_project, name='update_project'),
-    # path('accounts/', include('registration.backends.default.urls')),
+    path('account/logout/', views.logout_view, name='logout'),
+    # path('account/logout/', views.logout_view, name='logout'),
+    path('account/login/', views.CustomLoginView.as_view(), name='login'),
+    
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
