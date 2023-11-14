@@ -28,122 +28,127 @@ def new_register(request):
     return render(request, 'stock/register.html', context)
 
 
-@login_required
+
 def get_client_ip(request):
-    labels = []
-    label_item = []
-    label_item1 = []
-    label_item11 = []
-    label_item_b = []
-    label_item_p = []
-    reservation=AddTask.objects.all()
-    data_b=[]
-    data_price=[]
-    label_price=[]
-    data = []
-    data1 = []
-    data11 = []
-    data_p = []
-    issue_data = []
-    receive_data = []
-    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
-    if x_forwarded_for:
-        ip = x_forwarded_for.split(',')[0]
-    else:
-        ip = request.META.get('REMOTE_ADDR')
-    u = User(user=ip)
-    result = User.objects.filter(Q(user__icontains=ip))
-    if len(result) == 1:
-        pass
-    else:
-        u.save()
-        return ip
-    queryset = Stock.objects.all()
-    querysetProj=Project.objects.all()
-    querys = Category.objects.all()
-    querysetpart=AddTask.objects.all()
     
-    queryset_task=AddTask.objects.filter(confirmed=True)
-    for chart in queryset_task:
-        label_price.append(str(chart.dateReservation.date()) )
-        data_price.append(chart.deposit_amount)
-    print("date price: ",data_price)
+    if request.user.is_authenticated:
 
-
-    for chart in queryset:
-        label_item.append(chart.nomProject)
-        data.append(chart.superficieHabitable)
-        issue_data.append(chart.superficieHabitable)
-        receive_data.append(chart.superficieHabitable)
-
-    for chart in querysetpart:
-        label_item11.append(chart.customer.nom)
-        data11.append(chart.remaining_parts)
-
-    
-    label_item_p.append(len(queryset.filter(etat="Libre")))
-    data_p.append(len(queryset.filter(etat="Libre")))
-
-    label_item_p.append(len(queryset.filter(etat="Réservé")))
-    data_p.append(len(queryset.filter(etat="Réservé")))
-
-    label_item_p.append(len(queryset.filter(etat="Vendu")))
-    data_p.append(len(queryset.filter(etat="Vendu")))
-       
-    label_item_p=["Libre", "Réservé", "Vendu"]
+        labels = []
+        label_item = []
+        label_item1 = []
+        label_item11 = []
+        label_item_b = []
+        label_item_p = []
+        reservation=AddTask.objects.all()
+        data_b=[]
+        data_price=[]
+        label_price=[]
+        data = []
+        data1 = []
+        data11 = []
+        data_p = []
+        issue_data = []
+        receive_data = []
+        x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+        if x_forwarded_for:
+            ip = x_forwarded_for.split(',')[0]
+        else:
+            ip = request.META.get('REMOTE_ADDR')
+        u = User(user=ip)
+        result = User.objects.filter(Q(user__icontains=ip))
+        if len(result) == 1:
+            pass
+        else:
+            u.save()
+            return ip
+        queryset = Stock.objects.all()
+        querysetProj=Project.objects.all()
+        querys = Category.objects.all()
+        querysetpart=AddTask.objects.all()
         
-    
+        queryset_task=AddTask.objects.filter(confirmed=True)
+        for chart in queryset_task:
+            label_price.append(str(chart.dateReservation.date()) )
+            data_price.append(chart.deposit_amount)
+        print("date price: ",data_price)
 
 
-    for chart in querysetProj:
-        label_item1.append(chart.nom)
-        data1.append(chart.nbrLotsTotal)
-         
+        for chart in queryset:
+            label_item.append(chart.nomProject)
+            data.append(chart.superficieHabitable)
+            issue_data.append(chart.superficieHabitable)
+            receive_data.append(chart.superficieHabitable)
 
-    for chart in querys:
-        labels.append(str(chart.group))
+        for chart in querysetpart:
+            label_item11.append(chart.customer.nom)
+            data11.append(chart.remaining_parts)
 
-    today = datetime.datetime.now().date()
-    task_count_by_day = AddTask.objects.annotate(day=TruncDate('dateReservation')).values('day').annotate(count=Count('id')).order_by('day')
-    # print("task: ",task_count_by_day )
-    for task_count in task_count_by_day :
-        data_b.append(task_count["count"])
-        year = task_count["day"].year
-        month = task_count["day"].month
-        day_of_month = task_count["day"].day
-        label_item_b.append( f"{year}-{month:02d}-{day_of_month:02d}")
-   
+        
+        label_item_p.append(len(queryset.filter(etat="Libre")))
+        data_p.append(len(queryset.filter(etat="Libre")))
+
+        label_item_p.append(len(queryset.filter(etat="Réservé")))
+        data_p.append(len(queryset.filter(etat="Réservé")))
+
+        label_item_p.append(len(queryset.filter(etat="Vendu")))
+        data_p.append(len(queryset.filter(etat="Vendu")))
+        
+        label_item_p=["Libre", "Réservé", "Vendu"]
+            
+        
+
+
+        for chart in querysetProj:
+            label_item1.append(chart.nom)
+            data1.append(chart.nbrLotsTotal)
+            
+
+        for chart in querys:
+            labels.append(str(chart.group))
+
+        today = datetime.datetime.now().date()
+        task_count_by_day = AddTask.objects.annotate(day=TruncDate('dateReservation')).values('day').annotate(count=Count('id')).order_by('day')
+        # print("task: ",task_count_by_day )
+        for task_count in task_count_by_day :
+            data_b.append(task_count["count"])
+            year = task_count["day"].year
+            month = task_count["day"].month
+            day_of_month = task_count["day"].day
+            label_item_b.append( f"{year}-{month:02d}-{day_of_month:02d}")
     
         
-    count = Stock.objects.all().count()
-    body = Project.objects.all().count()
-    mind = AddTask.objects.all().count()
-    soul = Person.objects.all().count()
-    reservation=AddTask.objects.all()
-    context = {
-        'count': count,
-        'body': body,
-        'mind': mind,
-        'soul': soul,
-        'labels': labels,
-        'data': data,
-        'data1': data1,
-        'data11': data11,
-        'data_b': data_b,
-        'issue_data': issue_data,
-        'receive_data': receive_data,
-        'label_item': label_item,
-        'label_item1': label_item1,
-        'label_item11': label_item11,
-        'label_item_b': label_item_b,
-        'data_price':data_price,
-        'data_p':data_p,
-        'label_item_p': label_item_p,
-        'reservation':reservation,
-        'label_price':label_price,
-         'present_date': datetime.date.today()
-    }
-    return render(request, 'stock/home.html', context)
+            
+        count = Stock.objects.all().count()
+        body = Project.objects.all().count()
+        mind = AddTask.objects.all().count()
+        soul = Person.objects.all().count()
+        reservation=AddTask.objects.all()
+        context = {
+            'count': count,
+            'body': body,
+            'mind': mind,
+            'soul': soul,
+            'labels': labels,
+            'data': data,
+            'data1': data1,
+            'data11': data11,
+            'data_b': data_b,
+            'issue_data': issue_data,
+            'receive_data': receive_data,
+            'label_item': label_item,
+            'label_item1': label_item1,
+            'label_item11': label_item11,
+            'label_item_b': label_item_b,
+            'data_price':data_price,
+            'data_p':data_p,
+            'label_item_p': label_item_p,
+            'reservation':reservation,
+            'label_price':label_price,
+            'present_date': datetime.date.today()
+        }
+        return render(request, 'stock/home.html', context)
+    else:
+        return redirect("/account/login/")
 
 import datetime
 @login_required
