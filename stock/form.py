@@ -115,6 +115,13 @@ class AddTaskForm(forms.ModelForm):
         model = AddTask
         fields = ['customer','product','dateReservation',"payement_type","parts",'NextdatePayement',"deposit_amount" ]
 
+        labels = {
+            'customer': 'Client',
+            'product': 'Projet',
+            'dateReservation': 'date Reservation',
+            # ... customize other labels as needed
+        }
+
 
 class AddCountry(forms.ModelForm):
     class Meta:

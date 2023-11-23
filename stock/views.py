@@ -626,9 +626,9 @@ def add_task(request):
     if request.method == 'POST':
         form = AddTaskForm(request.POST )
         if form.is_valid():
-            print("form s valid"   )
+         
             updatestock=Stock.objects.filter(pk=request.POST["product"]).first()
-            print("query is ", updatestock.etat)
+             
             if updatestock.etat == "Libre":
                 print("updatestock.etat ==  Libre ")
                 confirmed_ord=False
@@ -659,6 +659,7 @@ def add_task(request):
                     total_amount=updatestock.montantVenteTotal,
                     parts=request.POST["parts"],
                     dateReservation=request.POST["dateReservation"],
+                    payement_type=request.POST["payement_type"],
                     confirmed=confirmed_ord
                 )
                 
