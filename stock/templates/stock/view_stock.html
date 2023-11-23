@@ -26,20 +26,25 @@
                                                 <tr class="nk-tb-item nk-tb-head">
                                                     <th class="nk-tb-col tb-col-sm"><span>COUNT</span></th>
                                                     <!-- <th class="nk-tb-col"><span>STOCK NAME</span></th> -->
-                                                    <th class="nk-tb-col"><span>nom</span></th>
-                                                    
-                                                    <th class="nk-tb-col"><span>Block</span></th>
-                                                    <th class="nk-tb-col"><span>Etage</span></th>
-                                                    <th class="nk-tb-col"><span>coté</span></th>
+                                                    <th class="nk-tb-col"><span>NOM PROJET</span></th>
+                                                    <th class="nk-tb-col"><span>NUM BIEN</span></th>
+                                                    <th class="nk-tb-col"><span>BLOC</span></th>
+                                                    <th class="nk-tb-col"><span>ETAGE</span></th>
+                                                    <th class="nk-tb-col"><span>COTE</span></th>
                                                     <th class="nk-tb-col"><span>Type</span></th>
                                                     <!-- <th class="nk-tb-col tb-col-md"><span>REORDER LEVEL</span></th> -->
-                                                    <th class="nk-tb-col tb-col-md"><span>Superficie Habitable</span></th>  
+                                                    <th class="nk-tb-col tb-col-md"><span>SUPERFICIE HABITABLE</span></th>
+                                                    <th class="nk-tb-col tb-col-md"><span>SUPERFICIE UTILE</span></th>
+                                                    <th class="nk-tb-col tb-col-md"><span>PRIX M² HORSTAXE</span></th>
+                                                    <th class="nk-tb-col tb-col-md"><span>PRIX M² TTC</span></th>
                                                     <!-- <th class="nk-tb-col tb-col-md"><span>total deposit</span></th>   -->
                                                     <!-- <th class="nk-tb-col tb-col-md"><span>Payement method</span></th> -->
-                                                    <th class="nk-tb-col tb-col-md"><span>Prix Vente M2</span></th>
-                                                      <th class="nk-tb-col tb-col-md"><span>Montant Vente Total</span></th>
-                                                      <th class="nk-tb-col tb-col-md"><span>Etat</span></th>
-                                                      <th class="nk-tb-col tb-col-md"><span>Observation</span></th>
+                                                    <th class="nk-tb-col tb-col-md"><span>PRIX VENTE M²</span></th>
+                                                    <th class="nk-tb-col tb-col-md"><span>MONTANT HORSTAXE</span></th>
+                                                    <th class="nk-tb-col tb-col-md"><span>MONTANT TTC</span></th>
+                                                      <th class="nk-tb-col tb-col-md"><span>MONTANT VENTE TOTAL</span></th>
+                                                      <th class="nk-tb-col tb-col-md"><span>ETAT</span></th>
+                                                      <th class="nk-tb-col tb-col-md"><span>OBSERVATION</span></th>
                                                     <th class="nk-tb-col nk-tb-col-tools">
                                                         <ul class="nk-tb-actions gx-1 my-n1">
                                                             <li class="mr-n1">
@@ -144,19 +149,29 @@
                                                             <span style="background: red" class="title"><a href="{% url 'stock_detail' every.id %}">{{ every.item_name }}</a></span>
                                                             {% else %} -->
                                                             <!-- <span class="title"><a href="{% url 'stock_detail' every.id %}">{{ every.item_name }}</a></span> -->
-                                                            <span class="title"><a href="{% url 'stock_detail' every.id %}">{{ every.nomProject }}</a></span>
+                                                            <!-- <span class="title"><a href="{% url 'stock_detail' every.id %}">{{ every.nomProject.nom }}</a></span> -->
+                                                            <span class="title"><a>{{ every.nomProject.nom }}</a></span>
+
                                                             <!-- {% endif %} -->
                                                         </span>
                                                     </td>
                                                     <td class="nk-tb-col">
-                                                        <span class="tb-lead"><a href="{% url 'update_stock' every.id %}">{{every.bloc}}</a></span>
-                                                    </td><td class="nk-tb-col">
-                                                        <span class="tb-lead"><a href="{% url 'update_stock' every.id %}">{{every.etage}}</a></span>
-                                                    </td><td class="nk-tb-col">
-                                                        <span class="tb-lead"><a href="{% url 'update_stock' every.id %}">{{every.cote}}</a></span>
+                                                        <!-- <span class="tb-lead"><a href="{% url 'update_stock' every.id %}">{{every.bloc}}</a></span> -->
+                                                        <span class="tb-lead"><a>{{every.numBien}}</a></span>
                                                     </td>
                                                     <td class="nk-tb-col">
-                                                        <span class="tb-lead"><a href="{% url 'update_stock' every.id %}">{{every.typeBien}}</a></span>
+                                                        <!-- <span class="tb-lead"><a href="{% url 'update_stock' every.id %}">{{every.bloc}}</a></span> -->
+                                                        <span class="tb-lead"><a>{{every.bloc}}</a></span>
+                                                    </td><td class="nk-tb-col">
+                                                        <!-- <span class="tb-lead"><a href="{% url 'update_stock' every.id %}">{{every.etage}}</a></span> -->
+                                                        <span class="tb-lead"><a>{{every.etage}}</a></span>
+                                                    </td><td class="nk-tb-col">
+                                                        <!-- <span class="tb-lead"><a href="{% url 'update_stock' every.id %}">{{every.cote}}</a></span> -->
+                                                        <span class="tb-lead"><a>{{every.cote}}</a></span>
+                                                    </td>
+                                                    <td class="nk-tb-col">
+                                                        <!-- <span class="tb-lead"><a href="{% url 'update_stock' every.id %}">{{every.typeBien}}</a></span> -->
+                                                        <span class="tb-lead"><a>{{every.typeBien}}</a></span>
                                                     </td>
                                                      
                                                     
@@ -164,7 +179,26 @@
                                                         <span class="tb-sub">{{every.superficieHabitable }}</span>
                                                     </td>
                                                     <td class="nk-tb-col tb-col-md">
+                                                        <span class="tb-sub">{{every.superficieUtil }}</span>
+                                                    </td>
+                                                    <td class="nk-tb-col tb-col-md">
+                                                        <span class="tb-sub">{{every.prixM2HorsTaxe }}</span>
+                                                    </td>
+
+                                                    <td class="nk-tb-col tb-col-md">
+                                                        <span class="tb-sub">{{every.prixM2TTC }}</span>
+                                                    </td>
+                                                    
+                                                    <td class="nk-tb-col tb-col-md">
                                                         <span class="tb-sub">{{every.prixVenteM2}}</span>
+                                                    </td>
+
+                                                    <td class="nk-tb-col tb-col-md">
+                                                        <span class="tb-sub">{{every.montantHorsTaxe}}</span>
+                                                    </td>
+                                                    
+                                                    <td class="nk-tb-col tb-col-md">
+                                                        <span class="tb-sub">{{every.montantTTC}}</span>
                                                     </td>
                                                     <td class="nk-tb-col tb-col-md">
                                                         <span class="tb-sub">{{every.montantVenteTotal}}</span>
@@ -183,10 +217,10 @@
                                                                     <a href="#" class="dropdown-toggle btn btn-icon btn-trigger" data-toggle="dropdown"><em class="icon ni ni-more-h"></em></a>
                                                                     <div class="dropdown-menu dropdown-menu-right">
                                                                         <ul class="link-list-opt no-bdr">
-                                                                            <li><a href="{% url 'update_stock' every.id %}"><em class="icon ni ni-edit"></em><span>Edit Product</span></a></li>
-                                                                            <li><a href="{% url 'stock_detail' every.id %}"><em class="icon ni ni-eye"></em><span>View Product</span></a></li>
-                                                                            <li><a href="{% url 're_order' every.id %}"><em class="icon ni ni-activity-round"></em><span>Reorder Level</span></a></li>
-                                                                            <li><a id="{{forloop.counter}}"  href="javascript:void(0)"><em class="icon ni ni-trash"></em><span>Remove Product</span></a></li>
+                                                                            <li><a href="{% url 'update_stock' every.id %}"><em class="icon ni ni-edit"></em><span>Modifier Bien</span></a></li>
+                                                                            <!-- <li><a href="{% url 'stock_detail' every.id %}"><em class="icon ni ni-eye"></em><span>View Product</span></a></li> -->
+                                                                            <!-- <li><a href="{% url 're_order' every.id %}"><em class="icon ni ni-activity-round"></em><span>Reorder Level</span></a></li> -->
+                                                                            <li><a id="{{forloop.counter}}"  href="javascript:void(0)"><em class="icon ni ni-trash"></em><span>Supprimer Bien</span></a></li>
                                                                         </ul>
                                                                     </div>
                                                                 </div>

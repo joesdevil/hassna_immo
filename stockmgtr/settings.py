@@ -141,7 +141,7 @@ ACCOUNT_ACTIVATION_DAYS = 7
 REGISTRATION_AUTO_LOGIN = False  # Automatically log the user in.
 SITE_ID = 1
 LOGIN_REDIRECT_URL = '/'
-
+LOGIN_URL = '/account/login'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

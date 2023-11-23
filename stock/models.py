@@ -68,7 +68,7 @@ class Person(models.Model):             #acquereur
     idIdentite = models.IntegerField() 
     nomDossier = models.CharField(max_length=20, blank=True, null=True,default="")
     dateDossier = models.DateTimeField(auto_now_add=False, auto_now=False, null=True)
-    idBienDemande =  models.IntegerField()           #affiche les biens dispo pour choisir
+    #affiche les biens dispo pour choisir
     def __str__(self):
         return str(self.nom)
     
@@ -80,17 +80,18 @@ class Project(models.Model):
     nom = models.CharField(max_length=150)
     type = models.CharField(choices=Projet_type, max_length=100)
     Localisation = models.CharField(max_length=150)
-    nbrLotsTotal = models.IntegerField()    #nbr des logements(appartements et locaux et services) total dans le projet
+    nbrLotsTotal = models.IntegerField(default=0)    #nbr des logements(appartements et locaux et services) total dans le projet
     nbILOT = models.IntegerField()      #nbr des patiments total dans le projet
     Observation = models.TextField()
 
 
     def __str__(self):
-        return str(self.nom)
+        return f"{self.nom} - {self.type} - {self.Localisation}"
     
 
 class Stock(models.Model):        #biens
-    nomProject = models.CharField(max_length=50, blank=True, null=True)  
+    # nomProject = models.CharField(max_length=50, blank=True, null=True)  
+    nomProject=models.ForeignKey(Project,on_delete=models.SET_NULL, blank=True, null=True)
     numLOT= models.CharField(max_length=50, blank=True, null=True)   #num batiment
     numBien=models.CharField(max_length=50, blank=True, null=True)    #num Porte
     bloc=models.CharField(max_length=50, blank=True, null=True)
@@ -102,11 +103,11 @@ class Stock(models.Model):        #biens
     superficieUtil= models.IntegerField(  blank=True, null=True)
     prixM2HorsTaxe = models.IntegerField(default='0', blank=True, null=True)
     prixM2TTC = models.IntegerField( blank=True, null=True)
-    prixVenteM2 = models.IntegerField(  blank=True, null=True)
-    montantHorsTaxe = models.IntegerField(  blank=True, null=True)        #montantHorsTaxe =  prixM2HorsTaxe * superficieHabitable
-    montantTTC = models.IntegerField( )                 #montantTTC =  prixM2TTC * superficieHabitable
-    montantVenteTotal = models.IntegerField(  blank=True, null=True)          #montantVenteTotal =  montantVenteM2 * superficieHabitable
-    etat = models.CharField(choices=Etat_Bien_Type, max_length=100)        #libre reservé vendu
+    prixVenteM2 = models.IntegerField(  blank=True, null=True , default = 1)
+    montantHorsTaxe = models.IntegerField(  blank=True, null=True)
+    montantTTC = models.IntegerField()
+    montantVenteTotal = models.IntegerField(  blank=True, null=True)  
+    etat = models.CharField(choices=Etat_Bien_Type, max_length=100) 
     
     Observatioin = models.TextField()
     export_to_csv = models.BooleanField(default=False)
@@ -116,12 +117,15 @@ class Stock(models.Model):        #biens
         verbose_name_plural = "Biens" 
 
     def __str__(self):
-        return self.nomProject
+        return f"{self.nomProject} / LOT: {self.numLOT} /Num Bien: {self.numBien} --- --- --- {self.etat}"
     
     def save(self, *args, **kwargs):
         # Perform your calculations or custom logic here before saving
         # For example, let's say you want to double the quantity before saving
         self.montantVenteTotal  = self.prixVenteM2 * self.superficieHabitable
+        self.montantHorsTaxe = self.prixM2HorsTaxe * self.superficieHabitable
+        self.montantTTC = self.prixM2TTC * self.superficieHabitable
+
 
         # Call the save method of the parent class to actually save the instance
         super().save(*args, **kwargs)
@@ -183,7 +187,9 @@ class AddTask(models.Model):
     customer = models.ForeignKey(Person, on_delete=models.CASCADE)
     product = models.ForeignKey(Stock, on_delete=models.CASCADE)
   
-    total_amount=models.CharField(max_length=10000)
+    total_amount=models.CharField(max_length=10000 ,default="")
+    prixVenteM2 = models.IntegerField(  blank=True, null=True , default = 1)
+
     
     # phone_number = models.CharField(max_length=50, blank=True, null=True)
     deposit_amount=models.FloatField(max_length=950,  default= 0)
@@ -192,6 +198,7 @@ class AddTask(models.Model):
     remaining_parts = models.IntegerField(default='0', blank=True, null=True)
     dateReservation= models.DateTimeField(auto_now_add=False, auto_now=False)
     NextdatePayement= models.DateTimeField(auto_now_add=False, auto_now=False,null=True,blank=True)
+
     confirmed=models.BooleanField(default=False)
     
     def __str__(self):
@@ -205,7 +212,7 @@ class AddTask(models.Model):
         # Perform your calculations or custom logic here before saving
         # For example, let's say you want to double the quantity before saving
         self.total_amount  = self.product.montantVenteTotal
-
+        self.product.prixVenteM2 = self.prixVenteM2
         # Call the save method of the parent class to actually save the instance
         super().save(*args, **kwargs)
 

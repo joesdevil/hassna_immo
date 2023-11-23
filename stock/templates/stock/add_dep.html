@@ -25,14 +25,14 @@
                                         <h5 class="card-title">{{title}}</h5>
                                     </div>
                                     <form method="POST"   enctype="multipart/form-data"    >
-                                        <ul class="link-list-opt no-bdr">
+                                        <!-- <ul class="link-list-opt no-bdr">
                                             <li><a href="/add_loc"><em class="icon ni ni-plus"></em><span>Add location</span></a></li>
                                              
-                                        </ul>
+                                        </ul> -->
                                       {% csrf_token %}
                                       {{form|crispy}}
                                       
-                                      <input class="mt-2 btn btn-primary" type="submit" value="Add Stock">
+                                      <input class="mt-2 btn btn-primary" type="submit" value="Ajouter Client">
                                     </form>
                                 </div>
                             </div>

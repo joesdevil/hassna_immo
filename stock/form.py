@@ -17,12 +17,12 @@ class CategoryCreateForm(forms.ModelForm):
 class AddProject(forms.ModelForm):
     class Meta:
         model = Project
-        fields = ["nom","type","nbrLotsTotal","Localisation", "nbILOT", "Observation" ]
+        fields = ["nom","type","Localisation", "nbILOT", "Observation" ]
 
 class StockCreateForm(forms.ModelForm):
     class Meta:
         model = Stock
-        fields = ['nomProject','numLOT','numBien','bloc','etage','cote','vue','typeBien','superficieHabitable','superficieUtil','prixM2HorsTaxe','prixM2TTC','prixVenteM2','montantHorsTaxe','montantTTC','montantVenteTotal','etat','Observatioin']
+        fields = ['nomProject','numLOT','numBien','bloc','etage','cote','vue','typeBien','superficieHabitable','superficieUtil','prixM2HorsTaxe','prixM2TTC','prixVenteM2','etat','Observatioin']
 
     # def clean_category(self):
     #     category = self.cleaned_data.get('category')
@@ -79,7 +79,7 @@ class ProjectUpdateForm(forms.ModelForm):
 class StockUpdateForm(forms.ModelForm):
     class Meta:
         model = Stock
-        fields = ['nomProject','numLOT','numBien','bloc','etage','cote','vue','typeBien','superficieHabitable','superficieUtil','prixM2HorsTaxe','prixM2TTC','prixVenteM2','montantHorsTaxe','montantTTC','montantVenteTotal','etat','Observatioin']
+        fields = ['nomProject','numLOT','numBien','bloc','etage','cote','vue','typeBien','superficieHabitable','superficieUtil','prixM2HorsTaxe','prixM2TTC','prixVenteM2','etat','Observatioin']
 
         
     
@@ -87,32 +87,33 @@ class TaskUpdateForm(forms.ModelForm):
     class Meta:
         model = AddTask
         fields = '__all__'
+        
 
 
 class IssueForm(forms.ModelForm):
     class Meta:
         model = Stock
-        fields = ['nomProject','numLOT','numBien','bloc','etage','cote','vue','typeBien','superficieHabitable','superficieUtil','prixM2HorsTaxe','prixM2TTC','prixVenteM2','montantHorsTaxe','montantTTC','montantVenteTotal','etat','Observatioin']
+        fields = ['nomProject','numLOT','numBien','bloc','etage','cote','vue','typeBien','superficieHabitable','superficieUtil','prixM2HorsTaxe','prixM2TTC','prixVenteM2','etat','Observatioin']
 
 
 
 class ReceiveForm(forms.ModelForm):
     class Meta:
         model = Stock
-        fields = ['nomProject','numLOT','numBien','bloc','etage','cote','vue','typeBien','superficieHabitable','superficieUtil','prixM2HorsTaxe','prixM2TTC','prixVenteM2','montantHorsTaxe','montantTTC','montantVenteTotal','etat','Observatioin']
+        fields = ['nomProject','numLOT','numBien','bloc','etage','cote','vue','typeBien','superficieHabitable','superficieUtil','prixM2HorsTaxe','prixM2TTC','prixVenteM2','etat','Observatioin']
 
 
 
 class ReorderLevelForm(forms.ModelForm):
     class Meta:
         model = Stock
-        fields = ['nomProject','numLOT','numBien','bloc','etage','cote','vue','typeBien','superficieHabitable','superficieUtil','prixM2HorsTaxe','prixM2TTC','prixVenteM2','montantHorsTaxe','montantTTC','montantVenteTotal','etat','Observatioin']
+        fields = ['nomProject','numLOT','numBien','bloc','etage','cote','vue','typeBien','superficieHabitable','superficieUtil','prixM2HorsTaxe','prixM2TTC','prixVenteM2','etat','Observatioin']
 
 
 class AddTaskForm(forms.ModelForm):
     class Meta:
         model = AddTask
-        fields = ['customer','product' ,"total_amount",'dateReservation',"payement_type","parts",'NextdatePayement',"deposit_amount" ]
+        fields = ['customer','product','dateReservation',"payement_type","parts",'NextdatePayement',"deposit_amount" ]
 
 
 class AddCountry(forms.ModelForm):
@@ -136,7 +137,7 @@ class AddCity(forms.ModelForm):
 class DependentDropdownForm(forms.ModelForm):
     class Meta:
         model = Person
-        fields = ['nom','dateNaissance','lieuNaissance','phone','email','idIdentite','nomDossier','dateDossier','idBienDemande']
+        fields = ['nom','dateNaissance','lieuNaissance','phone','email','idIdentite','nomDossier','dateDossier' ]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

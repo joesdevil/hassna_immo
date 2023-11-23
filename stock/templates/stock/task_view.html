@@ -26,16 +26,16 @@
                                                 <tr class="nk-tb-item nk-tb-head">
                                                     <th class="nk-tb-col tb-col-sm"><span>COUNT</span></th>
                                                     <!-- <th class="nk-tb-col"><span>STOCK NAME</span></th> -->
-                                                    <th class="nk-tb-col"><span>CUSTOMER</span></th>
+                                                    <th class="nk-tb-col"><span>ACQUEREUR</span></th>
                                                     <th class="nk-tb-col"><span>BIEN</span></th>
                                                     <!-- <th class="nk-tb-col tb-col-md"><span>REORDER LEVEL</span></th> -->
                                                     
                                                   
-                                                    
-                                                      <th class="nk-tb-col tb-col-md"><span>Total amount</span></th>
-                                                      <th class="nk-tb-col tb-col-md"><span>Deposit amount</span></th>
-                                                      <th class="nk-tb-col tb-col-md"><span>PAYEMENT TYPE</span></th>
-                                                      <th class="nk-tb-col tb-col-md"><span>PARTS</span></th>
+                                                      <th class="nk-tb-col tb-col-md"><span>PRIX DE VENTE M²</span></th>
+                                                      <th class="nk-tb-col tb-col-md"><span>PRIX DE VENTE TOTAL</span></th>
+                                                      <th class="nk-tb-col tb-col-md"><span>MONTANT Déposé</span></th>
+                                                      <th class="nk-tb-col tb-col-md"><span>TYPE DE PAIEMENT</span></th>
+                                                      <th class="nk-tb-col tb-col-md"><span>TRANCHES</span></th>
                                                       <th class="nk-tb-col tb-col-md"><span>DATE</span></th>
 
                                                      
@@ -126,19 +126,26 @@
                                                             <span style="background: red" class="title"><a href="{% url 'stock_detail' every.id %}">{{ every.item_name }}</a></span>
                                                             {% else %} -->
                                                             <!-- <span class="title"><a href="{% url 'stock_detail' every.id %}">{{ every.item_name }}</a></span> -->
-                                                            <span class="title"><a href="{% url 'stock_detail' every.id %}">{{ every.customer }}</a></span>
+                                                            <!-- <span class="title"><a href="{% url 'stock_detail' every.id %}">{{ every.customer }}</a></span> -->
+                                                            <span class="title"><a>{{ every.customer }}</a></span>
+
                                                             <!-- {% endif %} -->
                                                         </span>
                                                     </td>
 
                                                     <td class="nk-tb-col">
-                                                        <span class="tb-lead"><a href="{% url 'update_stock' every.id %}">{{every.product.nomProject}}</a></span>
+                                                        <!-- <span class="tb-lead"><a href="{% url 'update_stock' every.id %}">{{every.product.nomProject}}</a></span> -->
+                                                        <!-- <span class="tb-lead"><a>{{every.product.nomProject}}</a></span> -->
+                                                        <span class="tb-lead"><a>{{every.product.numBien}}</a></span>
+
                                                     </td>
                                                    
                                                     
-                                                   
                                                     <td class="nk-tb-col tb-col-md">
-                                                        <span class="tb-sub">{{every.total_amount}}</span>
+                                                        <span class="tb-sub">{{every.product.prixVenteM2}}</span>
+                                                    </td>
+                                                    <td class="nk-tb-col tb-col-md">
+                                                        <span class="tb-sub">{{every.product.montantVenteTotal}}</span>
                                                     </td>
                                                     <td class="nk-tb-col tb-col-md">
                                                         <span class="tb-sub">{{every.deposit_amount}}</span>
@@ -161,10 +168,10 @@
                                                                     <a href="#" class="dropdown-toggle btn btn-icon btn-trigger" data-toggle="dropdown"><em class="icon ni ni-more-h"></em></a>
                                                                     <div class="dropdown-menu dropdown-menu-right">
                                                                         <ul class="link-list-opt no-bdr">
-                                                                            <li><a href="{% url 'update_task' every.id %}"><em class="icon ni ni-edit"></em><span>Edit Project</span></a></li>
-                                                                            <li><a href="{% url 'stock_detail' every.id %}"><em class="icon ni ni-eye"></em><span>View Product</span></a></li>
-                                                                            <li><a href="{% url 'co_order' every.id %}"><em class="icon ni ni-check"></em><span>{% if every.confirmed %}Cancel Order{% else %}Confirm Order{% endif %}</span></a></li>
-                                                                            <li><a id="{{forloop.counter}}s"  href="javascript:void(0)"><em class="icon ni ni-trash" ></em><span>Remove Project</span></a></li>
+                                                                            <li><a href="{% url 'update_task' every.id %}"><em class="icon ni ni-edit"></em><span>Modifier Reservation</span></a></li>
+                                                                            <li><a href="{% url 'update_stock' every.product.id %}"><em class="icon ni ni-eye"></em><span>Modifier details Bien</span></a></li>
+                                                                            <!-- <li><a href="{% url 'co_order' every.id %}"><em class="icon ni ni-check"></em><span>{% if every.confirmed %}Annuler Reservation{% else %}Confirm Order{% endif %}</span></a></li> -->
+                                                                            <li><a id="{{forloop.counter}}s"  href="javascript:void(0)"><em class="icon ni ni-trash" ></em><span>Supprimer Reservation</span></a></li>
                                                                         </ul>
                                                                     </div>
                                                                 </div>
