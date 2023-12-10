@@ -118,7 +118,11 @@ class AddTaskForm(forms.ModelForm):
         labels = {
             'customer': 'Client',
             'product': 'Projet',
-            'dateReservation': 'date Reservation',
+            'dateReservation': 'Date Reservation',
+            'payement_type' :'Type du paiement',
+            'parts' : 'Nombre de Tranches',
+            'NextdatePayement' : 'Date du Prochain Versement',
+            'deposit_amount' : 'Montant Déposé'
             # ... customize other labels as needed
         }
 

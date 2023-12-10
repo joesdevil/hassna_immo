@@ -275,7 +275,7 @@ def add_cat(request):
                 user=request.user
             )
             
-            messages.success(request, 'Successful')
+            messages.success(request, 'Succès')
             return redirect('/add_stock')
     else:
         form = CategoryCreateForm()
@@ -301,7 +301,7 @@ def add_loc(request):
             return redirect(f'/add_loc1?q={form.cleaned_data["name"]}')
           
             
-        messages.success(request, 'Successful')
+        messages.success(request, 'Succès')
         return redirect('/add_loc1')
     else:
         form = AddCountry(request.POST)
@@ -335,7 +335,7 @@ def add_loc1(request):
         
        
         
-        messages.success(request, 'Successful')
+        messages.success(request, 'Succès')
         return redirect('/add_loc2')
     else:
          
@@ -371,7 +371,7 @@ def add_loc2(request):
         
        
         
-        messages.success(request, 'Successful')
+        messages.success(request, 'Succès')
         return redirect('/dependent_forms')
     else:
          
@@ -412,7 +412,7 @@ def update_project(request, pk):
         if form.is_valid():
              
             form.save()
-            messages.success(request, 'Successfully Updated!')
+            messages.success(request, 'Modifié avec succès!')
             return redirect('/view_project')
     context = {'form': form, 'update': update,'present_date': datetime.date.today(), 'reservation':reservation,'title': title}
     return render(request, 'stock/add_project.html', context)
